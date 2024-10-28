@@ -2,11 +2,11 @@
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
-
+		
 		<Version>2024.1</Version>
 		<FileVersion>$(Version)</FileVersion>
 		<ProductVersion>$(Version)</ProductVersion>
-
+		
 		<AssemblyName>UncertainLuei.$(MSBuildProjectName)</AssemblyName>
 		<RootNamespace>UncertainLuei.BaldiPlus.$(MSBuildProjectName)</RootNamespace>
 	</PropertyGroup>

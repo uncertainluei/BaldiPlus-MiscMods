@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MathMachineTweaks", "MathMachineTweaks\MathMachineTweaks.csproj", "{DCEE4130-EAE4-4AC3-A20B-FE7FE2C66C66}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TransitionTweaks", "TransitionTweaks\TransitionTweaks.csproj", "{EBF2E93A-6941-44D2-A525-89256C375862}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransitionTweaks", "TransitionTweaks\TransitionTweaks.csproj", "{EBF2E93A-6941-44D2-A525-89256C375862}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestartLevelButton", "RestartLevelButton\RestartLevelButton.csproj", "{295BD921-DCDC-419B-885D-608BC930ACED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,18 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{DCEE4130-EAE4-4AC3-A20B-FE7FE2C66C66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DCEE4130-EAE4-4AC3-A20B-FE7FE2C66C66}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DCEE4130-EAE4-4AC3-A20B-FE7FE2C66C66}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DCEE4130-EAE4-4AC3-A20B-FE7FE2C66C66}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A62C1449-67D5-48BD-B9C2-E6E2D3DFCB38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A62C1449-67D5-48BD-B9C2-E6E2D3DFCB38}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A62C1449-67D5-48BD-B9C2-E6E2D3DFCB38}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A62C1449-67D5-48BD-B9C2-E6E2D3DFCB38}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EBF2E93A-6941-44D2-A525-89256C375862}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EBF2E93A-6941-44D2-A525-89256C375862}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBF2E93A-6941-44D2-A525-89256C375862}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBF2E93A-6941-44D2-A525-89256C375862}.Release|Any CPU.Build.0 = Release|Any CPU
+		{295BD921-DCDC-419B-885D-608BC930ACED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{295BD921-DCDC-419B-885D-608BC930ACED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{295BD921-DCDC-419B-885D-608BC930ACED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{295BD921-DCDC-419B-885D-608BC930ACED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
