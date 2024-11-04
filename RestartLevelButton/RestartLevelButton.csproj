@@ -12,6 +12,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="io.github.uncertainluei.baldiplus.restartlevelbutton\Lang_En.json" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="BepInEx.AssemblyPublicizer" Version="0.4.2" />
 		<PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2">
 			<PrivateAssets>all</PrivateAssets>
@@ -54,6 +58,12 @@
 		<Reference Include="Unity.TextMeshPro">
 			<HintPath>..\Dependencies\Unity.TextMeshPro.dll</HintPath>
 		</Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="io.github.uncertainluei.baldiplus.restartlevelbutton\Lang_En.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
 	</ItemGroup>
 
 </Project>

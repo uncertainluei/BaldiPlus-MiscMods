@@ -1,0 +1,16 @@
+{
+  "items": [
+    {
+      "key": "ItemFees_Desc_Apple",
+      "value": "An Apple for Baldi\nGive this to Baldi and as long as you have at least {0} YTPs,\nhe won't resist from stopping to scarf it down!\nMay take away half of your points if you have too many!"
+    },
+    {
+      "key": "ItemFees_Desc_BusPass",
+      "value": "Bus Pass\nYou'll need not only one of these with you if you want to go\non a field trip, but also {0} spare YTPs for the travelling costs!"
+    },
+    {
+      "key": "ItemFees_Desc_GrapplingHook",
+      "value": "Grappling Hook\nFire this baby at a far away wall to quickly get pulled towards it.\nEach use charges you {0} YTPs, instead of just when it is entirely used up."
+    }
+  ]
+}

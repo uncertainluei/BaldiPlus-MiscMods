@@ -1,0 +1,12 @@
+{
+	"items": [
+		{
+			"key": "But_Restart",
+			"value": "Restart"
+		},
+		{
+			"key": "Men_RestartConfirm",
+			"value": "Are you sure?\nThat'll cost you a power tube!"
+		}
+	]
+}

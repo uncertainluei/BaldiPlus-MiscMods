@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TransitionTweaks", "Transit
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestartLevelButton", "RestartLevelButton\RestartLevelButton.csproj", "{295BD921-DCDC-419B-885D-608BC930ACED}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItemFees", "ItemFees\ItemFees.csproj", "{BD9626B0-42B6-478B-BBEF-921B9CBF231D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{295BD921-DCDC-419B-885D-608BC930ACED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{295BD921-DCDC-419B-885D-608BC930ACED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{295BD921-DCDC-419B-885D-608BC930ACED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD9626B0-42B6-478B-BBEF-921B9CBF231D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD9626B0-42B6-478B-BBEF-921B9CBF231D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD9626B0-42B6-478B-BBEF-921B9CBF231D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD9626B0-42B6-478B-BBEF-921B9CBF231D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

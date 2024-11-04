@@ -12,6 +12,16 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="io.github.uncertainluei.baldiplus.itemfees\Lang_En.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="io.github.uncertainluei.baldiplus.itemfees\Lang_En.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="BepInEx.AssemblyPublicizer" Version="0.4.2" />
 		<PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.2">
 			<PrivateAssets>all</PrivateAssets>
@@ -44,6 +54,15 @@
 		</Reference>
 		<Reference Include="UnityEngine.CoreModule">
 			<HintPath>..\Dependencies\UnityEngine.CoreModule.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.UI">
+			<HintPath>..\Dependencies\UnityEngine.UI.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.UIModule">
+			<HintPath>..\Dependencies\UnityEngine.UIModule.dll</HintPath>
+		</Reference>
+		<Reference Include="Unity.TextMeshPro">
+			<HintPath>..\Dependencies\Unity.TextMeshPro.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 

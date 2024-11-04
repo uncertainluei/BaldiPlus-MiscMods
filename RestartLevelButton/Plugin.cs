@@ -1,11 +1,11 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
-
+using MTM101BaldAPI.AssetTools;
 using MTM101BaldAPI.Registers;
 
 using System.Collections;
+using System.IO;
 using System.Linq;
-
 using TMPro;
 
 using UnityEngine;
@@ -31,6 +31,8 @@ namespace UncertainLuei.BaldiPlus.RestartLevelButton
                 true,
                 "Will display a confirmation screen just like the exit button if true.");
 
+            AssetLoader.LocalizationFromFile(Path.Combine(AssetLoader.GetModPath(this), "Lang_En.json"), Language.English);
+
             LoadingEvents.RegisterOnAssetsLoaded(Info, CreateRestartButton(), false);
         }
 
@@ -39,7 +41,7 @@ namespace UncertainLuei.BaldiPlus.RestartLevelButton
             yield return 1;
             yield return "Modifying pause screen";
 
-            CoreGameManager cgm = Resources.FindObjectsOfTypeAll<CoreGameManager>().First();
+            CoreGameManager cgm = Resources.FindObjectsOfTypeAll<CoreGameManager>().First(x => x.GetInstanceID() > 0);
             Transform pause = cgm.pauseScreens[0].transform;
 
             // Workaround for creating events (unity why do you gotta make persistent events an ass)
