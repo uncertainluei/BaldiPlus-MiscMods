@@ -41,7 +41,7 @@ namespace UncertainLuei.BaldiPlus.ItemFees
 
             LoadingEvents.RegisterOnAssetsLoaded(Info, GetAssets(), false);
             // Costs config is in post so it can deal with extended enums
-            LoadingEvents.RegisterOnAssetsLoaded(Info, LoadCostsConfig(saveGameSystem), true);
+            LoadingEvents.RegisterOnAssetsLoaded(Info, PostLoad(saveGameSystem), true);
 
             Harmony harmony = new Harmony(ModGuid);
             harmony.PatchAllConditionals();
@@ -55,22 +55,22 @@ namespace UncertainLuei.BaldiPlus.ItemFees
             yield return "Creating item description overrides";
             descOverrides.Add(ItemMetaStorage.Instance.FindByEnum(Items.Apple), "ItemFees_Desc_Apple");
             descOverrides.Add(ItemMetaStorage.Instance.FindByEnum(Items.BusPass), "ItemFees_Desc_BusPass");
-
-            // Fix grappling hook cost not being the same as the initial 5-use version
-            ItemMetaData grappleMeta = ItemMetaStorage.Instance.FindByEnum(Items.GrapplingHook);
-            descOverrides.Add(grappleMeta, "ItemFees_Desc_GrapplingHook");
-            for (int i = 1; i < 5; i++)
-            {
-                grappleMeta.itemObjects[i].price = grappleMeta.itemObjects[0].price;
-            }
+            descOverrides.Add(ItemMetaStorage.Instance.FindByEnum(Items.GrapplingHook), "ItemFees_Desc_GrapplingHook");
             yield break;
         }
 
-        private IEnumerator LoadCostsConfig(ItemFeesSaveGameIO saveGameSystem)
+        private IEnumerator PostLoad(ItemFeesSaveGameIO saveGameSystem)
         {
-            yield return 1;
+            yield return 2;
+            yield return "Re-adjusting multi-use item prices";
+            int price;
+            foreach (ItemMetaData meta in ItemMetaStorage.Instance.GetAllWithFlags(ItemFlags.MultipleUse))
+            {
+                price = meta.value.price;
+                meta.itemObjects.Do(x => x.price = price);
+            }
             yield return "Loading costs config file";
-            ItemFeesConfig.Reload();
+            ItemFeesCosts.Reload();
             saveGameSystem.Ready();
             ModdedFileManager.Instance.RegenerateTags();
             yield break;
@@ -112,7 +112,7 @@ namespace UncertainLuei.BaldiPlus.ItemFees
                 if (!ready) return new string[0];
 
                 string hash = "";
-                ItemFeesConfig.ItemCosts.Do(x => hash += ((int)x.Key).ToString() + "_" + x.Value.ToString() + "_");
+                ItemFeesCosts.ItemCosts.Do(x => hash += ((int)x.Key).ToString() + "_" + x.Value.ToString() + "_");
                 return new string[] { Hash128.Compute(hash).ToString() };
             }
 

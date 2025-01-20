@@ -12,10 +12,10 @@ using UnityEngine;
 
 namespace UncertainLuei.BaldiPlus.ItemFees
 {
-    class ItemFeesConfig
+    class ItemFeesCosts
     {
         [JsonIgnore]
-        private static ItemFeesConfig instance;
+        private static ItemFeesCosts instance;
 
         [JsonIgnore]
         private static Dictionary<Items, int> defaultCosts = new Dictionary<Items, int>()
@@ -50,7 +50,7 @@ namespace UncertainLuei.BaldiPlus.ItemFees
         public static void Reload()
         {
             if (instance == null)
-                instance = new ItemFeesConfig();
+                instance = new ItemFeesCosts();
 
             instance.costsEnum = defaultCosts;
             if (File.Exists(ItemFeesPlugin.costsConfigPath))
@@ -70,20 +70,15 @@ namespace UncertainLuei.BaldiPlus.ItemFees
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError($"ItemFees Config failed to serialize! Exception:\n{e}");
+                    Debug.LogError($"ItemFees Costs Config failed to serialize! Exception:\n{e}");
                 }
             }
-# if DEBUG
             else
             {
                 instance.costs = new Dictionary<string, int>();
-                instance.costsEnum.Do(x =>
-                {
-                    instance.costs.Add(x.Key.ToStringExtended(), x.Value);
-                });
+                instance.costsEnum.Do(x => instance.costs.Add(x.Key.ToStringExtended(), x.Value));
                 File.WriteAllText(ItemFeesPlugin.costsConfigPath, JsonConvert.SerializeObject(instance, Formatting.Indented));
             }
-# endif
         }
 
         public static Dictionary<Items, int> ItemCosts => instance.costsEnum;

@@ -6,7 +6,7 @@ namespace UncertainLuei.BaldiPlus.ItemFees
     {
         public static int GetUsageCost(this ItemObject itm)
         {
-            if (ItemFeesConfig.ItemCosts.TryGetValue(itm.itemType, out int price))
+            if (ItemFeesCosts.ItemCosts.TryGetValue(itm.itemType, out int price))
                 return price;
 
             return itm.price / 10;
