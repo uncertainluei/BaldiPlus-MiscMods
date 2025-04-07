@@ -12,7 +12,7 @@ namespace UncertainLuei.BaldiPlus.TransitionTweaks
     {
         public const string ModName = "Transition Tweaks";
         public const string ModGuid = "io.github.uncertainluei.baldiplus.transitiontweaks";
-        public const string ModVersion = "2024.1";
+        public const string ModVersion = "1.0";
 
         // CONFIGURATION
         internal static ConfigEntry<OverrideTransitionMode> config_overrideMode;

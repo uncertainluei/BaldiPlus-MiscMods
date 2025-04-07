@@ -17,11 +17,14 @@ namespace UncertainLuei.BaldiPlus.ItemFees.Patches
         public static readonly MethodInfo ytpPenaltyMethod = AccessTools.Method(typeof(UseItemPatches), "UsageYtpPenalty");
         public static void UsageYtpPenalty(ItemManager itemMan, int slot)
         {
+            // Do not run if it's the tutorial level
+            if (ItemFeesExtensions.IsTutorial) return;
+
             ItemMetaData meta = itemMan.items[slot].GetMeta();
 
             // If an item with NoUses is used in special interactions (i.e. giving the Bus Pass to Johnny, YTPs are not revoked)
             if (meta == null || meta.flags != ItemFlags.NoUses)
-                CoreGameManager.Instance.AddPoints(-itemMan.GetUsageCost(slot), itemMan.pm.playerNumber, true);
+                CoreGameManager.Instance.AddPoints(-itemMan.GetUsageCost(slot), itemMan.pm.playerNumber, true, false);
         }
 
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
@@ -58,7 +61,7 @@ namespace UncertainLuei.BaldiPlus.ItemFees.Patches
 
             ItemMetaData meta = __instance.items[__instance.selectedItem].GetMeta();
             if (meta != null && meta.flags != ItemFlags.NoUses &&
-                CoreGameManager.Instance.GetPoints(__instance.pm.playerNumber) < __instance.GetUsageCost())
+                !__instance.CanAffordSlot())
             {
                 CoreGameManager.Instance.audMan.PlaySingle(ItemFeesPlugin.errorSound);
                 return false;
@@ -74,7 +77,7 @@ namespace UncertainLuei.BaldiPlus.ItemFees.Patches
         private static void SetItemAvailability(HudManager hud, ItemManager itmMan, int slot)
         {
             if (hud && hud.itemSprites[slot])
-                hud.itemSprites[slot].color = CoreGameManager.Instance.GetPoints(itmMan.pm.playerNumber) < itmMan.GetUsageCost(slot) ? Color.gray : Color.white;
+                hud.itemSprites[slot].color = itmMan.CanAffordSlot(slot) ? Color.white : Color.gray;
         }
         public static void SetAllItemAvailability(HudManager hud, ItemManager itemMan)
         {
@@ -167,7 +170,7 @@ namespace UncertainLuei.BaldiPlus.ItemFees.Patches
         }
 
         private static readonly MethodInfo ytpPenaltyMethod = AccessTools.Method(typeof(BaldiTakeApplePatch), "YtpPenalty");
-        private static readonly MethodInfo testAppleMethod = AccessTools.Method(typeof(ItemFeesExtensions), "CanAfford");
+        private static readonly MethodInfo testAppleMethod = AccessTools.Method(typeof(ItemFeesExtensions), "CanAffordItemType");
         private static readonly FieldInfo playerNumberField = AccessTools.Field(typeof(PlayerManager), "playerNumber");
 
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
@@ -210,7 +213,7 @@ namespace UncertainLuei.BaldiPlus.ItemFees.Patches
         {
             if (___unlocked) return true;
 
-            if (!player.CanAfford(Items.BusPass))
+            if (!player.CanAffordItemType(Items.BusPass))
             {
                 ___baldiAudioManager.FlushQueue(true);
                 ___baldiAudioManager.QueueAudio(___audNoPass);
@@ -218,7 +221,7 @@ namespace UncertainLuei.BaldiPlus.ItemFees.Patches
             }
             else if (player.itm.Has(Items.BusPass))
             {
-                CoreGameManager.Instance.AddPoints(-Mathf.Max(Items.BusPass.GetUsageCost()), player.playerNumber, true);
+                CoreGameManager.Instance.AddPoints(-Mathf.Max(Items.BusPass.GetUsageCost()), player.playerNumber, true, false);
             }
             return true;
         }
@@ -228,10 +231,14 @@ namespace UncertainLuei.BaldiPlus.ItemFees.Patches
     [HarmonyPatch(typeof(Pickup), "ClickableSighted")]
     class PickupSightPatch
     {
-        private static void Postfix(int player, ItemObject ___item, bool ___showDescription)
+        private static bool Prefix(int player, ItemObject ___item, bool ___showDescription)
         {
-            if (___showDescription)
-                CoreGameManager.Instance.GetHud(player).tooltip.ActualUpdateTooltip(___item.GetDescription());
+            if (___showDescription && ___item.HasDescriptionOverride(out string newKey))
+            {
+                CoreGameManager.Instance.GetHud(player).tooltip.UpdateTooltip(newKey);
+                return false;
+            }
+            return true;
         }
     }
 }

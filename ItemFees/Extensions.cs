@@ -21,41 +21,71 @@ namespace UncertainLuei.BaldiPlus.ItemFees
             return itmMan.items[slot].GetUsageCost();
         }
 
-        private static Items lastItem;
-        private static int lastItemCost;
+        private static Items _lastItem;
+        private static int _lastCost;
 
         public static int GetUsageCost(this Items itemType)
         {
             // If it's the same item type then do not bother recalculating
-            if (itemType != lastItem)
+            if (itemType != _lastItem)
             {
                 ItemMetaData md = ItemMetaStorage.Instance.FindByEnum(itemType);
-                lastItem = itemType;
+                _lastItem = itemType;
 
                 // Grab the total UsageCost
-                lastItemCost = 0;
+                _lastCost = 0;
+                // Get the highest price
                 foreach (ItemObject itm in md.itemObjects)
                 {
-                    if (lastItemCost < itm.GetUsageCost())
-                        lastItemCost = itm.GetUsageCost();
+                    if (_lastCost < itm.GetUsageCost())
+                        _lastCost = itm.GetUsageCost();
                 }
             }
 
-            return lastItemCost;
+            return _lastCost;
         }
 
-        public static bool CanAfford(this PlayerManager pm, Items itemType)
+        public static bool CanAffordItemType(this PlayerManager pm, Items itemType)
         {
-            return CoreGameManager.Instance.GetPoints(pm.playerNumber) >= itemType.GetUsageCost();
+            return IsTutorial || CoreGameManager.Instance.GetPoints(pm.playerNumber) >= itemType.GetUsageCost();
         }
 
-        public static string GetDescription(this ItemObject itm)
+        public static bool CanAffordSlot(this ItemManager itm)
         {
+            return itm.CanAffordSlot(itm.selectedItem);
+        }
+
+        public static bool CanAffordSlot(this ItemManager itm, int slot)
+        {
+            return IsTutorial || CoreGameManager.Instance.GetPoints(itm.pm.playerNumber) >= itm.GetUsageCost(slot);
+        }
+
+        private static BaseGameManager _gameMan;
+        private static bool _isTutorial;
+        public static bool IsTutorial
+        {
+            get
+            {
+                if (BaseGameManager.Instance != _gameMan)
+                {
+                    _gameMan = BaseGameManager.Instance;
+                    _isTutorial = _gameMan is TutorialGameManager;
+                }
+                return _isTutorial;
+            }
+        }
+
+        public static bool HasDescriptionOverride(this ItemObject itm, out string newText)
+        {
+            newText = "";
+
             ItemMetaData meta = itm.GetMeta();
             if (meta != null && ItemFeesPlugin.descOverrides.TryGetValue(meta, out string newDesc))
-                return string.Format(LocalizationManager.Instance.GetLocalizedText(newDesc), itm.GetUsageCost());
-
-            return LocalizationManager.Instance.GetLocalizedText(itm.descKey);
+            {
+                newText = string.Format(LocalizationManager.Instance.GetLocalizedText(newDesc), itm.GetUsageCost());
+                return true;
+            }
+            return false;
         }
     }
 }

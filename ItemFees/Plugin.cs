@@ -19,7 +19,7 @@ namespace UncertainLuei.BaldiPlus.ItemFees
     {
         public const string ModName = "Item Fees";
         public const string ModGuid = "io.github.uncertainluei.baldiplus.itemfees";
-        public const string ModVersion = "2024.1";
+        public const string ModVersion = "1.0";
 
         public static Dictionary<ItemMetaData, string> descOverrides = new Dictionary<ItemMetaData, string>();
 
@@ -67,7 +67,11 @@ namespace UncertainLuei.BaldiPlus.ItemFees
             foreach (ItemMetaData meta in ItemMetaStorage.Instance.GetAllWithFlags(ItemFlags.MultipleUse))
             {
                 price = meta.value.price;
-                meta.itemObjects.Do(x => x.price = price);
+                meta.itemObjects.Do(x =>
+                {
+                    if (!x.name.EndsWith("_Tutorial")) // Do not include the tutorial variant
+                        x.price = price;
+                });
             }
             yield return "Loading costs config file";
             ItemFeesCosts.Reload();
@@ -89,7 +93,7 @@ namespace UncertainLuei.BaldiPlus.ItemFees
                 ready = true;
             }
 
-            private PluginInfo info;
+            private readonly PluginInfo info;
             private bool ready;
             public override PluginInfo pluginInfo => info;
 

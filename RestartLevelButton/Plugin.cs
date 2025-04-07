@@ -18,7 +18,7 @@ namespace UncertainLuei.BaldiPlus.RestartLevelButton
     {
         public const string ModName = "Restart Level Button";
         public const string ModGuid = "io.github.uncertainluei.baldiplus.restartlevelbutton";
-        public const string ModVersion = "2024.1";
+        public const string ModVersion = "1.0";
 
         // CONFIGURATION
         internal static ConfigEntry<bool> config_requireConfirm;
