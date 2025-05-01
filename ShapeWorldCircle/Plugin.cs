@@ -198,14 +198,14 @@ namespace UncertainLuei.BaldiPlus.ShapeWorldCircle
 
             if (title == "END")
             {
+                scene.shopItems = scene.shopItems.AddToArray(new WeightedItemObject() { selection = assetMan.Get<ItemObject>("NerfGunItem"), weight = 25 });
+                scene.potentialNPCs.Add(new WeightedNPC() { selection = assetMan.Get<CircleNpc>("CircleNpc"), weight = 100 });
+
                 foreach (CustomLevelObject lvl in lvls)
                 {
                     lvl.posters = lvl.posters.AddToArray(new WeightedPosterObject() { selection = assetMan.Get<PosterObject>("NerfGunPoster"), weight = 100 });
                     lvl.potentialItems = lvl.potentialItems.AddToArray(new WeightedItemObject() { selection = assetMan.Get<ItemObject>("NerfGunItem"), weight = 50 });
-                    scene.shopItems = scene.shopItems.AddToArray(new WeightedItemObject() { selection = assetMan.Get<ItemObject>("NerfGunItem"), weight = 25 });
                 }
-
-                scene.potentialNPCs.Add(new WeightedNPC() { selection = assetMan.Get<CircleNpc>("CircleNpc"), weight = 1500 });
             }
         }
 

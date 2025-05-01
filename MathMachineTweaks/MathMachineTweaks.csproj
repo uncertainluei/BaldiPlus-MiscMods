@@ -2,19 +2,15 @@
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
-		
+
 		<Version>1.0</Version>
 		<FileVersion>$(Version)</FileVersion>
 		<ProductVersion>$(Version)</ProductVersion>
-		
+
 		<AssemblyName>UncertainLuei.$(MSBuildProjectName)</AssemblyName>
 		<RootNamespace>UncertainLuei.BaldiPlus.$(MSBuildProjectName)</RootNamespace>
 		<NoWarn>1701;1702;IDE0051</NoWarn>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\ItemFees\ItemFees.csproj" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="BepInEx.AssemblyPublicizer" Version="0.4.2" />
@@ -50,12 +46,6 @@
 		<Reference Include="UnityEngine.CoreModule">
 			<HintPath>..\Dependencies\UnityEngine.CoreModule.dll</HintPath>
 		</Reference>
-		<Reference Include="UnityEngine.AnimationModule">
-			<HintPath>..\Dependencies\UnityEngine.AnimationModule.dll</HintPath>
-		</Reference>
-		<Reference Include="UnityEngine.AudioModule">
-			<HintPath>..\Dependencies\UnityEngine.AudioModule.dll</HintPath>
-		</Reference>
 		<Reference Include="UnityEngine.UI">
 			<HintPath>..\Dependencies\UnityEngine.UI.dll</HintPath>
 		</Reference>
@@ -66,11 +56,4 @@
 			<HintPath>..\Dependencies\Unity.TextMeshPro.dll</HintPath>
 		</Reference>
 	</ItemGroup>
-
-	<ItemGroup>
-	  <None Update="io.github.uncertainluei.baldiplus.shapeworld\Lang_En.json">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	</ItemGroup>
-
 </Project>
