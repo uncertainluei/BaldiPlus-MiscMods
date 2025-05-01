@@ -1,8 +1,6 @@
 ﻿using HarmonyLib;
 using MTM101BaldAPI;
-using MTM101BaldAPI.SaveSystem;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 using System;
 using System.Collections.Generic;
@@ -18,7 +16,7 @@ namespace UncertainLuei.BaldiPlus.ItemFees
         private static ItemFeesCosts instance;
 
         [JsonIgnore]
-        private static Dictionary<Items, int> defaultCosts = new Dictionary<Items, int>()
+        private static readonly Dictionary<Items, int> defaultCosts = new Dictionary<Items, int>()
         {
             {Items.Quarter, 20},
             {Items.Scissors, 30},
@@ -36,6 +34,12 @@ namespace UncertainLuei.BaldiPlus.ItemFees
             {Items.DoorLock, 75},
             {Items.Bsoda, 75},
             {Items.Nametag, 75},
+	        {Items.CircleKey, 100},
+	        {Items.TriangleKey, 100},
+	        {Items.SquareKey, 100},
+	        {Items.HexagonKey, 100},
+	        {Items.PentagonKey, 100},
+	        {Items.WeirdKey, 100},
             {Items.PortalPoster, 100},
             {Items.Teleporter, 150},
             {Items.BusPass, 150},

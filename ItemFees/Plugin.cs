@@ -51,10 +51,16 @@ namespace UncertainLuei.BaldiPlus.ItemFees
         {
             yield return 2;
             yield return "Grabbing error sound";
-            errorSound = Resources.FindObjectsOfTypeAll<SoundObject>().First(x => x.name == "ErrorMaybe");
+            errorSound = Resources.FindObjectsOfTypeAll<SoundObject>().First(x => x.name == "ErrorMaybe" && x.GetInstanceID() >= 0);
+
+            errorSound = Instantiate(errorSound);
+            errorSound.name = "ErrorMaybe_Item";
+            errorSound.soundKey = "ItemFees_Sfx_Error";
+
             yield return "Creating item description overrides";
             descOverrides.Add(ItemMetaStorage.Instance.FindByEnum(Items.Apple), "ItemFees_Desc_Apple");
             descOverrides.Add(ItemMetaStorage.Instance.FindByEnum(Items.BusPass), "ItemFees_Desc_BusPass");
+            descOverrides.Add(ItemMetaStorage.Instance.Find(x => x.tags.Contains("shape_key")), "ItemFees_Desc_GameKey");
             descOverrides.Add(ItemMetaStorage.Instance.FindByEnum(Items.GrapplingHook), "ItemFees_Desc_GrapplingHook");
             yield break;
         }

@@ -1,0 +1,46 @@
+{
+  "items": [
+    {
+        "key": "ShapeWorld_Pst_Circle1", "value": "Circle"
+    },
+	{
+        "key": "ShapeWorld_Pst_Circle2", "value": "i bet you won't get the reference"
+    },
+	{
+        "key": "ShapeWorld_Itm_NerfGun1", "value": "(1) Nerf Gun"
+    },
+	{
+        "key": "ShapeWorld_Itm_NerfGun2", "value": "(2) Nerf Gun"
+    },
+	{
+        "key": "ShapeWorld_Desc_NerfGun", "value": "Nerf Gun\n<s>Shoot</s> squirt water at people with it! Or at least one specific circle..."
+    },
+	{
+        "key": "ShapeWorld_JumpRope_Start", "value": "LETS PLAY!"
+    },
+	{
+        "key": "ShapeWorld_JumpRope_Continue", "value": "SHAPE WORLD"
+    },
+	{
+        "key": "ShapeWorld_JumpRope_Fail", "value": "OOPS!"
+    },
+    {
+        "key": "ShapeWorld_Circle_Music", "value": "*Jingle Bells*"
+    },
+    {
+        "key": "ShapeWorld_Circle_Sad", "value": "OH! I guess I'll play with you later..."
+    },
+    {
+        "key": "ShapeWorld_Circle_Go", "value": "Go!"
+    },
+    {
+        "key": "ShapeWorld_Circle_Oops", "value": "Try agAIn!"
+    },
+    {
+        "key": "ShapeWorld_Circle_Congrats", "value": "Wow, you're awesome! Let's play another time!"
+    },
+    {
+        "key": "ShapeWorld_Circle_Random", "value": "?!?!?!?!?!?"
+    }
+  ]
+}
