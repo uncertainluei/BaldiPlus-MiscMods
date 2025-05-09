@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestartLevelButton", "Resta
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItemFees", "ItemFees\ItemFees.csproj", "{BD9626B0-42B6-478B-BBEF-921B9CBF231D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShapeWorldCircle", "ShapeWorldCircle\ShapeWorldCircle.csproj", "{06777AB3-8340-437E-90EC-678A83888CE8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecommendedChars", "RecommendedChars\RecommendedChars.csproj", "{06777AB3-8340-437E-90EC-678A83888CE8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathMachineTweaks", "MathMachineTweaks\MathMachineTweaks.csproj", "{C936F413-E8F5-4425-8723-30BD97FC5D62}"
 EndProject

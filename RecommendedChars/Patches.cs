@@ -1,18 +1,23 @@
 ﻿using HarmonyLib;
 
+using MTM101BaldAPI;
+
+using PineDebug;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
 using System.Reflection;
 
 using UnityEngine;
+using BepInEx.Configuration;
 
-namespace UncertainLuei.BaldiPlus.ShapeWorldCircle.Patches
+namespace UncertainLuei.BaldiPlus.RecommendedChars.Patches
 {
     [HarmonyPatch(typeof(ITM_Scissors), "Use")]
-    class ScissorsCannotCutRainbowsPatch
+    class ScissorsItemPatch
     {
-        private static readonly MethodInfo jumpropeCheckMethod = AccessTools.Method(typeof(ScissorsCannotCutRainbowsPatch), "HasCutAnyJumpropes");
+        private static readonly MethodInfo jumpropeCheckMethod = AccessTools.Method(typeof(ScissorsItemPatch), "HasCutAnyJumpropes");
 
         private static bool HasCutAnyJumpropes(PlayerManager pm)
         {
@@ -28,6 +33,18 @@ namespace UncertainLuei.BaldiPlus.ShapeWorldCircle.Patches
             return success;
         }
 
+        [ConditionalPatchConfig(RecommendedCharsPlugin.ModGuid, "Modules", "ArtsWWires")]
+        private static void Postfix(PlayerManager pm, ref bool __result, SoundObject ___audSnip)
+        {
+            bool oldResult = __result;
+            if (pm.TryGetComponent(out GrabbingGameContainer grabbed) && grabbed.TryCutGrabbingGames())
+                __result = true;
+
+            if (oldResult != __result)
+                CoreGameManager.Instance.audMan.PlaySingle(___audSnip);
+        }
+
+        [ConditionalPatchConfig(RecommendedCharsPlugin.ModGuid, "Modules", "Circle")]
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             bool patched = false;
@@ -65,41 +82,75 @@ namespace UncertainLuei.BaldiPlus.ShapeWorldCircle.Patches
             }
 
             if (!patched)
-                Debug.LogError("Transpiler \"ShapeWorldCircle.ScissorsCannotCutRainbowsPatch.Transpiler\" did not go through!");
+                Debug.LogError("Transpiler \"ShapeWorldCircle.ScissorsItemPatch.Transpiler\" did not go through!");
 
             yield break;
         }
     }
 
+    [ConditionalPatchConfig(RecommendedCharsPlugin.ModGuid, "Modules", "ArtsWWires")]
+    [HarmonyPatch(typeof(ITM_Boots), "Use")]
+    class BootsItemPatch
+    {
+        private static void Postfix(PlayerManager pm)
+        {
+            /* I was initially going to do some weird workarounds to remove the MoveMod
+             * if you had the boots on, but honestly I might as well just yoink the
+             * end game functionality that I used for the scissors
+             */
+            if (pm.TryGetComponent(out GrabbingGameContainer grabbed))
+                grabbed.TryCutGrabbingGames();
+        }
+    }
+
+    [ConditionalPatchConfig(RecommendedCharsPlugin.ModGuid, "Modules", "Circle")]
     [HarmonyPatch(typeof(Playtime), "EndJumprope")]
     class CircleEndJumpropePatch
     {
         private static void Postfix(Playtime __instance, bool won)
         {
-            if (!won && __instance.Character == ShapeWorldCirclePlugin.circleCharEnum)
+            if (!won && __instance.Character == CircleNpc.charEnum)
             {
                 // Re-disable the animator for good measure
                 __instance.animator.enabled = false;
 
                 CircleNpc circle = (CircleNpc)__instance;
-                circle.sprite.sprite = circle.sad;
+                circle.sprite.sprite = circle.sprSad;
             }
         }
     }
 
+    [ConditionalPatchConfig(RecommendedCharsPlugin.ModGuid, "Modules", "Circle")]
     [HarmonyPatch(typeof(Playtime), "EndCooldown")]
     class CircleEndCooldownPatch
     {
         private static void Postfix(Playtime __instance)
         {
-            if (__instance.Character == ShapeWorldCirclePlugin.circleCharEnum)
+            if (__instance.Character == CircleNpc.charEnum)
             {
                 // Re-disable the animator for good measure
                 __instance.animator.enabled = false;
 
                 CircleNpc circle = (CircleNpc)__instance;
-                circle.sprite.sprite = circle.normal;
+                circle.sprite.sprite = circle.sprNormal;
             }
+        }
+    }
+
+    [ConditionalPatchMod("alexbw145.baldiplus.pinedebug")]
+    [HarmonyPatch(typeof(PineDebugManager), "InitAssets")]
+    class PineDebugNpcIconPatch
+    {
+        internal static readonly Dictionary<Character, Texture2D> icons = new Dictionary<Character, Texture2D>();
+        private static bool initialized;
+
+        private static void Postfix()
+        {
+            if (initialized) return;
+            initialized = true;
+
+            foreach (Character character in icons.Keys)
+                PineDebugManager.pinedebugAssets.Add($"Border{character.ToStringExtended()}", icons[character]);
         }
     }
 }

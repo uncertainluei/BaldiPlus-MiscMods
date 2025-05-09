@@ -9,7 +9,7 @@ using MTM101BaldAPI;
 namespace UncertainLuei.BaldiPlus.MathMachineTweaks
 {
     [BepInPlugin(ModGuid, ModName, ModVersion)]
-    [BepInDependency("mtm101.rulerp.bbplus.baldidevapi", BepInDependency.DependencyFlags.HardDependency)]
+    [BepInDependency("mtm101.rulerp.bbplus.baldidevapi")]
     public class MathMachineTweaksPlugin : BaseUnityPlugin
     {
         public const string ModName = "Math Machine Tweaks";

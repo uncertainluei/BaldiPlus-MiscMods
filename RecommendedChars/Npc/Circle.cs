@@ -1,25 +1,26 @@
-﻿using System;
+﻿using MTM101BaldAPI.Components;
+
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
-using HarmonyLib;
-using MTM101BaldAPI.Components;
+
 using UnityEngine;
 
-namespace UncertainLuei.BaldiPlus.ShapeWorldCircle
+namespace UncertainLuei.BaldiPlus.RecommendedChars
 {
     class CircleNpc : Playtime
     {
         public SpriteRenderer sprite;
-        public Sprite normal;
-        public Sprite sad;
+        public Sprite sprNormal;
+        public Sprite sprSad;
+
+        internal static Character charEnum = (Character)(-1);
     }
 
     class CircleJumprope : Jumprope
     {
-        private const string startKey = "ShapeWorld_JumpRope_Start";
-        private const string continueKey = "ShapeWorld_JumpRope_Continue";
-        private const string failKey = "ShapeWorld_JumpRope_Fail";
+        private const string startKey = "RecChars_JumpRope_Start";
+        private const string continueKey = "RecChars_JumpRope_Continue";
+        private const string failKey = "RecChars_JumpRope_Fail";
 
         internal static Dictionary<string, Sprite[]> ropeAnimation;
         public CustomSpriteAnimator ropeAnimator;

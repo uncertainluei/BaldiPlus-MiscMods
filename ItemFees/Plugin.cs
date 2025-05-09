@@ -15,6 +15,7 @@ using UnityEngine;
 namespace UncertainLuei.BaldiPlus.ItemFees
 {
     [BepInPlugin(ModGuid, ModName, ModVersion)]
+    [BepInDependency("mtm101.rulerp.bbplus.baldidevapi")]
     class ItemFeesPlugin : BaseUnityPlugin
     {
         public const string ModName = "Item Fees";

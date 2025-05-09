@@ -397,7 +397,3 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-
-# Circle Mod assets
-ShapeWorldCircle/io.github.uncertainluei.baldiplus.shapeworld/Textures/
-ShapeWorldCircle/io.github.uncertainluei.baldiplus.shapeworld/Audio/

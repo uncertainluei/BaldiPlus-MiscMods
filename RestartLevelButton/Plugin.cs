@@ -14,6 +14,7 @@ using UnityEngine.Events;
 namespace UncertainLuei.BaldiPlus.RestartLevelButton
 {
     [BepInPlugin(ModGuid, ModName, ModVersion)]
+    [BepInDependency("mtm101.rulerp.bbplus.baldidevapi")]
     class RestartButtonPlugin : BaseUnityPlugin
     {
         public const string ModName = "Restart Level Button";

@@ -1,0 +1,38 @@
+{
+  "items": [
+	{ "key": "RecChars_Pst_Circle1", "value": "Circle" },
+	{ "key": "RecChars_Pst_Circle2", "value": "i bet you won't get the reference" },
+	{ "key": "RecChars_JumpRope_Start", "value": "LETS PLAY!" },
+	{ "key": "RecChars_JumpRope_Continue", "value": "SHAPE WORLD" },
+	{ "key": "RecChars_JumpRope_Fail", "value": "OOPS!" },
+	{ "key": "RecChars_Circle_Music", "value": "*Jingle Bells*" },
+	{ "key": "RecChars_Circle_Sad", "value": "OH! I guess I'll play with you later..." },
+	{ "key": "RecChars_Circle_Go", "value": "Go!" },
+	{ "key": "RecChars_Circle_Oops", "value": "Try agAIn!" },
+	{ "key": "RecChars_Circle_Congrats", "value": "Wow, you're awesome! Let's play another time!" },
+	{ "key": "RecChars_Circle_Random", "value": "?!?!?!?!?!?" },
+
+	{ "key": "RecChars_Pst_GottaBully1", "value": "Gotta Bully" },
+	{ "key": "RecChars_Pst_GottaBully2", "value": "The outcome of one Baldi's newest experiment, it cleans AND bullies! \"Gotta, BULLY BULLY BULLY!\"" },
+	{ "key": "RecChars_GottaBully_Intro", "value": "Looks like it's *bullying* time!" },
+	{ "key": "RecChars_GottaBully_Sweep", "value": "Gotta, *bully bully bully*!" },
+
+	{ "key": "RecChars_Pst_Wires1", "value": "Arts with Wires" },
+	{ "key": "RecChars_Pst_Wires2", "value": "A robotic puppet that came alive upon being hit by a lightning bolt!\nJust don't let it grab you!" },
+	{ "key": "RecChars_Wires_Instructions", "value": "Oh noes! You've been grabbed!\nMash {0}!" },
+	{ "key": "RecChars_Wires_Loop", "value": "*ROBOTIC STATIC*" },
+	{ "key": "RecChars_Wires_Intro", "value": "*ROBOTIC STATIC*" },
+
+	{ "key": "RecChars_Pst_ManMeme1", "value": "Man Meme Coin" },
+	{ "key": "RecChars_Pst_ManMeme2", "value": "A sentient coin that strolls around the school, unaware of its REAL purpose. Go figure!" },
+
+	{ "key": "RecChars_Itm_FlaminHotCheetos", "value": "Flamin' Hot Cheetos" },
+	{ "key": "RecChars_Desc_FlaminHotCheetos", "value": "Flamin' Hot Cheetos\nHot, spicy flavor packed into crunchy, cheesy snacks.\nThese snacks are full of flavor and spice!" },
+	{ "key": "RecChars_Itm_NerfGun1", "value": "(1) Nerf Gun" },
+	{ "key": "RecChars_Itm_NerfGun2", "value": "(2) Nerf Gun" },
+	{ "key": "RecChars_Desc_NerfGun", "value": "Nerf Gun\n<s>Shoot</s> squirt water at people with it! Or at least one specific circle..." },
+	{ "key": "RecChars_Itm_Shotgun", "value": "Shotgun" },
+	{ "key": "RecChars_Desc_Shotgun", "value": "Shotgun\nWhat the?! This shouldn't be possible!" },
+	{ "key": "RecChars_Shotgun_Shoot", "value": "*GUN SHOT*" }
+  ]
+}

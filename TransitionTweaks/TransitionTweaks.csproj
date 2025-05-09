@@ -28,9 +28,6 @@
 		<Reference Include="Assembly-CSharp" Publicize="true">
 			<HintPath>..\Dependencies\Assembly-CSharp.dll</HintPath>
 		</Reference>
-		<Reference Include="MTM101BaldAPI">
-			<HintPath>..\Dependencies\MTM101BaldAPI.dll</HintPath>
-		</Reference>
 		<Reference Include="BepInEx">
 			<HintPath>..\Dependencies\BepInEx.dll</HintPath>
 		</Reference>
