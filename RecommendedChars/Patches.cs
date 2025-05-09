@@ -10,7 +10,6 @@ using System.Reflection.Emit;
 using System.Reflection;
 
 using UnityEngine;
-using BepInEx.Configuration;
 
 namespace UncertainLuei.BaldiPlus.RecommendedChars.Patches
 {

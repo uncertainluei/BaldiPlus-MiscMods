@@ -58,6 +58,19 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
             this.gottaBully = gottaBully;
         }
 
+        public override void Enter()
+        {
+            base.Enter();
+            // Disable addend movemods so it doesn't get pushed elsewhere
+            npc.Navigator.Entity.SetResistAddend(true);
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
+            npc.Navigator.Entity.SetResistAddend(false);
+        }
+
         public override void Update()
         {
             waitTime -= Time.deltaTime * npc.TimeScale;

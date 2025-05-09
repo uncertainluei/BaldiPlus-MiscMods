@@ -165,7 +165,7 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
             {
                 scene.MarkAsNeverUnload();
                 scene.shopItems = scene.shopItems.AddToArray(new WeightedItemObject() { selection = AssetMan.Get<ItemObject>("NerfGunItem"), weight = 25 });
-                AddToNpcs(scene, 100);
+                AddToNpcs(scene, 100, true);
                 return;
             }
 
@@ -176,8 +176,9 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
                 switch (id)
                 {
                     case 0:
-                        // A 1 in 1000 chance is kinda impossible to predict so instead it's pretty low weight
-                        scene.potentialNPCs.Add(AssetMan.Get<CircleNpc>("CircleNpc").Weighted(3));
+                        // A 1 in 1000 chance is kinda impossible to predict so instead it's pretty low weight, also if you have guaranteed spawns it only spawns on F2
+                        if (!RecommendedCharactersConfig.guaranteeSpawnChar.Value)
+                            scene.potentialNPCs.Add(AssetMan.Get<CircleNpc>("CircleNpc").Weighted(3));
                         return;
                     case 1:
                         AddToNpcs(scene, 75);
@@ -191,12 +192,15 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
             }
         }
 
-        private void AddToNpcs(SceneObject scene, int weight)
+        private void AddToNpcs(SceneObject scene, int weight, bool endless = false)
         {
-            if (RecommendedCharactersConfig.guaranteeSpawnChar.Value)
-                scene.forcedNpcs = scene.forcedNpcs.AddToArray(AssetMan.Get<CircleNpc>("CircleNpc"));
-            else
+            if (!RecommendedCharactersConfig.guaranteeSpawnChar.Value)
                 scene.potentialNPCs.Add(AssetMan.Get<CircleNpc>("CircleNpc").Weighted(weight));
+            else if (endless || scene.levelNo == 1)
+            {
+                scene.forcedNpcs = scene.forcedNpcs.AddToArray(AssetMan.Get<CircleNpc>("CircleNpc"));
+                scene.additionalNPCs = Mathf.Max(scene.additionalNPCs - 1, 0);
+            }
         }
 
         private void FloorAddendLvl(string title, int id, LevelObject lvl)
@@ -334,14 +338,30 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
 
         private void FloorAddend(string title, int id, SceneObject scene)
         {
-            if (title == "END" || (title.StartsWith("F") && id > 1))
+            if (title == "END")
+            {
+                scene.MarkAsNeverUnload();
+                if (!RecommendedCharactersConfig.guaranteeSpawnChar.Value)
+                    scene.potentialNPCs.CopyCharacterWeight(Character.LookAt, AssetMan.Get<GottaBully>("GottaBullyNpc"));
+                else
+                {
+                    scene.forcedNpcs = scene.forcedNpcs.AddToArray(AssetMan.Get<GottaBully>("GottaBullyNpc"));
+                    scene.additionalNPCs = Mathf.Max(scene.additionalNPCs - 1, 0);
+                }
+                return;
+            }
+
+            if (title.StartsWith("F") && id > 1)
             {
                 scene.MarkAsNeverUnload();
 
-                if (RecommendedCharactersConfig.guaranteeSpawnChar.Value)
-                    scene.forcedNpcs = scene.forcedNpcs.AddToArray(AssetMan.Get<GottaBully>("GottaBullyNpc"));
-                else
+                if (!RecommendedCharactersConfig.guaranteeSpawnChar.Value)
                     scene.potentialNPCs.CopyCharacterWeight(Character.LookAt, AssetMan.Get<GottaBully>("GottaBullyNpc"));
+                else if (id == 2)
+                {
+                    scene.forcedNpcs = scene.forcedNpcs.AddToArray(AssetMan.Get<GottaBully>("GottaBullyNpc"));
+                    scene.additionalNPCs = Mathf.Max(scene.additionalNPCs - 1, 0);
+                }
             }
         }
     }
@@ -425,14 +445,33 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
 
         private void FloorAddend(string title, int id, SceneObject scene)
         {
-            if (title == "END" || (title.StartsWith("F") && id > 0))
+            if (title == "END")
             {
                 scene.MarkAsNeverUnload();
 
                 if (RecommendedCharactersConfig.guaranteeSpawnChar.Value)
+                {
                     scene.forcedNpcs = scene.forcedNpcs.AddToArray(AssetMan.Get<ArtsWithWires>("ArtsWithWiresNpc"));
+                    scene.additionalNPCs = Mathf.Max(scene.additionalNPCs - 1, 0);
+                }
                 else
                     scene.potentialNPCs.CopyCharacterWeight(Character.DrReflex, AssetMan.Get<ArtsWithWires>("ArtsWithWiresNpc"));
+                return;
+            }
+
+            if (title.StartsWith("F") && id > 0)
+            {
+                scene.MarkAsNeverUnload();
+
+                if (!RecommendedCharactersConfig.guaranteeSpawnChar.Value)
+                {
+                    scene.potentialNPCs.CopyCharacterWeight(Character.DrReflex, AssetMan.Get<ArtsWithWires>("ArtsWithWiresNpc"));
+                }
+                else if (id == 1)
+                {
+                    scene.forcedNpcs = scene.forcedNpcs.AddToArray(AssetMan.Get<ArtsWithWires>("ArtsWithWiresNpc"));
+                    scene.additionalNPCs = Mathf.Max(scene.additionalNPCs - 1, 0);
+                }
             }
         }
     }

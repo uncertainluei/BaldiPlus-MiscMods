@@ -24,7 +24,7 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
     {
         public const string ModName = "Luei's Recommended Character Pack";
         public const string ModGuid = "io.github.uncertainluei.baldiplus.recommendedchars";
-        public const string ModVersion = "1.0";
+        public const string ModVersion = "1.1";
 
         public static readonly AssetManager AssetMan = new AssetManager();
         internal static RecommendedCharsPlugin Plugin { get; private set; }
