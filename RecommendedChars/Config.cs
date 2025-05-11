@@ -7,10 +7,13 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
         internal static ConfigEntry<bool> moduleCircle;
         internal static ConfigEntry<bool> moduleGottaBully;
         internal static ConfigEntry<bool> moduleArtsWWires;
-        //internal static ConfigEntry<bool> moduleCaAprilFools;
+        internal static ConfigEntry<bool> moduleCaAprilFools;
+
+        internal static ConfigEntry<bool> intendedWiresBehavior;
+        internal static ConfigEntry<bool> ogWiresSprites;
 
         internal static ConfigEntry<bool> guaranteeSpawnChar;
-        internal static ConfigEntry<bool> ogWiresSprites;
+
 
         internal static void BindConfig(ConfigFile config)
         {
@@ -29,17 +32,23 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
                 "ArtsWWires",
                 true,
                 "Adds Arts with Wires, character sprites and audio from Kinzo/Kracc's 1st Prize Mania and Playtime's Swapped Basics respectively.");
-            //moduleCaAprilFools = config.Bind(
-            //    "Modules",
-            //    "CaAprilFools",
-            //    true,
-            //    "Adds a few features from the April Fools updates from the Chaos Awakens Minecraft mod.");
+            moduleCaAprilFools = config.Bind(
+                "Modules",
+                "CaAprilFools",
+                true,
+                "Adds a few features from the April Fools updates from the Chaos Awakens Minecraft mod.");
 
+            intendedWiresBehavior = config.Bind(
+                "Misc",
+                "IntendedWiresBehavior",
+                true,
+                "Arts with Wires will not reset their stare time when the player stops looking at it.");
             ogWiresSprites = config.Bind(
                 "Misc",
                 "OriginalWiresSprites",
                 false,
                 "Arts with Wires will use the sprites used in Playtime's Swapped Basics instead.");
+
             guaranteeSpawnChar = config.Bind(
                 "Misc",
                 "GuaranteeCharacterSpawn",

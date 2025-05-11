@@ -24,7 +24,7 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
     {
         public const string ModName = "Luei's Recommended Character Pack";
         public const string ModGuid = "io.github.uncertainluei.baldiplus.recommendedchars";
-        public const string ModVersion = "1.1";
+        public const string ModVersion = "1.1.1";
 
         public static readonly AssetManager AssetMan = new AssetManager();
         internal static RecommendedCharsPlugin Plugin { get; private set; }
@@ -57,13 +57,14 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
         {
             new Module_Circle(),
             new Module_GottaBully(),
-            new Module_ArtsWithWires()
+            new Module_ArtsWithWires(),
+            new Module_CaAprilFools()
         };
 
         internal static X CloneComponent<T, X>(T original) where T : MonoBehaviour where X : T
         {
             X val = original.gameObject.AddComponent<X>();
-
+            
             FieldInfo[] fields = typeof(T).GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).ToArray();
             foreach (FieldInfo fieldInfo in fields)
                 fieldInfo.SetValue(val, fieldInfo.GetValue(original));
@@ -143,8 +144,13 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
             
             foreach (Module module in RecommendedCharsPlugin.Plugin.modules)
                 tags.Add(module.Name);
-            if (tags.Count > 0 && RecommendedCharactersConfig.guaranteeSpawnChar.Value)
-                tags.Add("GuaranteedSpawn");
+            if (tags.Count > 0)
+            {
+                if (RecommendedCharactersConfig.guaranteeSpawnChar.Value)
+                    tags.Add("GuaranteedSpawn");
+                if ( RecommendedCharactersConfig.intendedWiresBehavior.Value)
+                    tags.Add("GuaranteedSpawn");
+            }
 
             return tags.ToArray();
         }

@@ -24,12 +24,16 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
         public float chargeSpeed = 30f;
         public float grip = 55f;
 
+        public bool stareStacks;
+        public float stareTime;
+
         public bool CooldownActive { get; private set; } = true;
         private float cooldown = 0f;
 
         public override void Initialize()
         {
             base.Initialize();
+            stareTime = 0f;
             navigator.SetSpeed(wanderSpeed);
             behaviorStateMachine.ChangeState(new ArtsWithWires_Wandering(this));
         }
@@ -127,8 +131,6 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
 
     public class ArtsWithWires_PlayerInSight : ArtsWithWires_StateBase
     {
-        private float timeInPlayerSight;
-
         public ArtsWithWires_PlayerInSight(ArtsWithWires wires) :
             base(wires)
         {
@@ -143,8 +145,8 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
         public override void InPlayerSight(PlayerManager player)
         {
             base.InPlayerSight(player);
-            timeInPlayerSight += Time.deltaTime * npc.TimeScale;
-            if (!player.Tagged && timeInPlayerSight >= 3F)
+            wires.stareTime += Time.deltaTime * npc.TimeScale;
+            if (!player.Tagged && wires.stareTime >= 3F)
             {
                 wires.ToggleAngry(true);
                 npc.behaviorStateMachine.ChangeState(new ArtsWithWires_Chasing(wires, player));
@@ -158,7 +160,8 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
 
         public override void Unsighted()
         {
-            timeInPlayerSight = 0f;
+            if (!wires.stareStacks)
+                wires.stareTime = 0f;
         }
     }
 
@@ -179,6 +182,7 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
         public override void Enter()
         {
             base.Enter();
+            wires.stareTime = 0f;
             npc.navigator.SetSpeed(wires.chargeSpeed);
             ChangeNavigationState(targetState);
         }

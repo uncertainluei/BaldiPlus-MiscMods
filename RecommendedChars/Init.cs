@@ -10,12 +10,12 @@ using MTM101BaldAPI.ObjectCreation;
 using MTM101BaldAPI.Registers;
 using MTM101BaldAPI.UI;
 
-using UncertainLuei.BaldiPlus.RecommendedChars.Patches;
-
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+
+using UncertainLuei.BaldiPlus.RecommendedChars.Patches;
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -31,6 +31,7 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
 
         public bool Enabled => ConfigEntry != null && ConfigEntry.Value;
         public abstract string Name { get; }
+        public virtual string SaveTag => Name;
         protected abstract ConfigEntry<bool> ConfigEntry { get; }
 
         public virtual Action LoadAction => null;
@@ -133,6 +134,8 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
             circle.runSpeed = 90f;
 
             circle.poster = ObjectCreators.CreateCharacterPoster(AssetMan.Get<Texture2D>("CircleTex/pri_circle"), "RecChars_Pst_Circle1", "RecChars_Pst_Circle2");
+            circle.poster.textData[1].font = BaldiFonts.ComicSans18.FontAsset();
+            circle.poster.textData[1].fontSize = 18;
             circle.poster.name = "CirclePoster";
 
             circle.sprite = circle.spriteRenderer[0];
@@ -369,6 +372,7 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
     public class Module_ArtsWithWires : Module
     {
         public override string Name => "Arts with Wires";
+        public override string SaveTag => Name + (RecommendedCharactersConfig.intendedWiresBehavior.Value ? " (v1.1.1+)" : "");
 
         public override Action LoadAction => Load;
         public override Action<string, int, SceneObject> FloorAddendAction => FloorAddend;
@@ -407,6 +411,8 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
 
             artsWithWires.audIntro = ObjectCreators.CreateSoundObject(AssetMan.Get<AudioClip>("WiresAud/AWW_Intro"), "RecChars_Wires_Intro", SoundType.Effect, artsWithWires.audMan.subtitleColor);
             artsWithWires.audLoop = ObjectCreators.CreateSoundObject(AssetMan.Get<AudioClip>("WiresAud/AWW_Loop"), "RecChars_Wires_Intro", SoundType.Effect, artsWithWires.audMan.subtitleColor);
+
+            artsWithWires.stareStacks = RecommendedCharactersConfig.intendedWiresBehavior.Value;
 
             Jumprope jumpropeCopy = GameObject.Instantiate(((Playtime)NPCMetaStorage.Instance.Get(Character.Playtime).value).jumpropePre, MTM101BaldiDevAPI.prefabTransform);
             jumpropeCopy.name = "ArtsWithWires GrabbingGame";
@@ -473,6 +479,92 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
                     scene.additionalNPCs = Mathf.Max(scene.additionalNPCs - 1, 0);
                 }
             }
+        }
+    }
+
+    public class Module_CaAprilFools : Module
+    {
+        public override string Name => "Man Meme Coin";
+
+        public override Action LoadAction => Load;
+        public override Action<string, int, SceneObject> FloorAddendAction => FloorAddend;
+
+        protected override ConfigEntry<bool> ConfigEntry => RecommendedCharactersConfig.moduleCaAprilFools;
+
+        private void Load()
+        {
+            AssetMan.AddRange(AssetLoader.TexturesFromMod(Plugin, "*.png", "Textures", "Item", "CAItems"), x => "CAItems/" + x.name);
+            AssetMan.AddRange(AssetLoader.TexturesFromMod(Plugin, "*.png", "Textures", "Npc", "MMCoin"), x => "MMCoinTex/" + x.name);
+
+            AudioClip boing = AssetLoader.AudioClipFromMod(Plugin, "Audio", "Boing.wav");
+            AssetMan.Add("Boing", ObjectCreators.CreateSoundObject(boing, "RecChars_Sfx_Boing", SoundType.Effect, Color.white));
+            LoadItems();
+        }
+
+        private void LoadItems()
+        {
+            // Flamin' Hot Cheetos
+            ItemObject cheetos = new ItemBuilder(Info)
+            .SetNameAndDescription("RecChars_Itm_FlaminHotCheetos", "RecChars_Desc_FlaminHotCheetos")
+            .SetEnum("RecChars_FlaminHotCheetos")
+            .SetMeta(ItemFlags.Persists, new string[] { "food" })
+            .SetSprites(AssetLoader.SpriteFromTexture2D(AssetMan.Get<Texture2D>("CAItems/FlaminHotCheetos_Small"), 25f), AssetLoader.SpriteFromTexture2D(AssetMan.Get<Texture2D>("CAItems/FlaminHotCheetos_Large"), 50f))
+            .SetShopPrice(800)
+            .SetGeneratorCost(80)
+            .SetItemComponent<ITM_FlaminHotCheetos>()
+            .Build();
+
+            ITM_FlaminHotCheetos cheetosItm = (ITM_FlaminHotCheetos)cheetos.item;
+            cheetosItm.gaugeSprite = cheetos.itemSpriteSmall;
+            cheetosItm.audEat = ((ITM_ZestyBar)ItemMetaStorage.Instance.FindByEnum(Items.ZestyBar).value.item).audEat;
+
+            // Cherry BSODA
+            ItemObject cherryBsoda = new ItemBuilder(Info)
+            .SetNameAndDescription("RecChars_Itm_CherryBsoda", "RecChars_Desc_CherryBsoda")
+            .SetEnum("RecChars_CherryBsoda")
+            .SetMeta(ItemFlags.Persists | ItemFlags.CreatesEntity, new string[] { "drink" })
+            .SetSprites(AssetLoader.SpriteFromTexture2D(AssetMan.Get<Texture2D>("CAItems/CherryBsoda_Small"), 25f), AssetLoader.SpriteFromTexture2D(AssetMan.Get<Texture2D>("CAItems/CherryBsoda_Large"), 50f))
+            .SetShopPrice(800)
+            .SetGeneratorCost(80)
+            .Build();
+
+            cherryBsoda.name = "RecChars CherryBsoda";
+
+            ITM_BSODA bsodaClone = GameObject.Instantiate((ITM_BSODA)ItemMetaStorage.Instance.FindByEnum(Items.Bsoda).value.item, MTM101BaldiDevAPI.prefabTransform);
+
+            ITM_CherryBsoda cherryBsodaUse = bsodaClone.gameObject.AddComponent<ITM_CherryBsoda>();
+            cherryBsoda.item = cherryBsodaUse;
+            cherryBsoda.item.name = "Itm_CherryBsoda";
+            cherryBsodaUse.entity = bsodaClone.entity;
+            cherryBsodaUse.spriteRenderer = bsodaClone.spriteRenderer;
+            cherryBsodaUse.spriteRenderer.sprite = AssetLoader.SpriteFromTexture2D(AssetMan.Get<Texture2D>("CAItems/CherryBsoda_Spray"), 12f);
+            cherryBsodaUse.sound = bsodaClone.sound;
+            cherryBsodaUse.boing = AssetMan.Get<SoundObject>("Boing");
+
+            ITM_GrapplingHook hook = (ITM_GrapplingHook)ItemMetaStorage.Instance.FindByEnum(Items.GrapplingHook).value.item;
+            cherryBsodaUse.entity.collisionLayerMask = hook.entity.collisionLayerMask;
+            cherryBsodaUse.layerMask = hook.layerMask;
+
+            GameObject.DestroyImmediate(bsodaClone);
+
+            // Ultimate Apple
+            ItemObject ultiApple = new ItemBuilder(Info)
+            .SetNameAndDescription("RecChars_Itm_UltimateApple", "RecChars_Desc_UltimateApple")
+            .SetEnum("RecChars_UltimateApple")
+            .SetMeta(ItemFlags.NoUses, new string[] { "food" })
+            .SetSprites(AssetLoader.SpriteFromTexture2D(AssetMan.Get<Texture2D>("CAItems/UltimateApple_Small"), 25f), AssetLoader.SpriteFromTexture2D(AssetMan.Get<Texture2D>("CAItems/UltimateApple_Large"), 50f))
+            .SetShopPrice(2500)
+            .SetGeneratorCost(100)
+            .Build();
+
+            ultiApple.item = ItemMetaStorage.Instance.FindByEnum(Items.Apple).value.item;
+
+            Baldi_UltimateApple.ultiAppleEnum = ultiApple.itemType;
+            Baldi_UltimateApple.ultiAppleSprites = AssetLoader.SpritesFromSpritesheet(2, 1, 32f, new Vector2(0.5f, 0.5f), AssetMan.Get<Texture2D>("CAItems/BaldiUltimateApple"));
+        }
+
+        private void FloorAddend(string title, int id, SceneObject scene)
+        {
         }
     }
 }

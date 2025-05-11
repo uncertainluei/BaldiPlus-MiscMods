@@ -10,7 +10,7 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
     class ITM_FlaminHotCheetos : Item
     {
         public SoundObject audEat;
-        public Sprite gagueSprite;
+        public Sprite gaugeSprite;
 
         private HudGauge timerGauge;
 
@@ -30,7 +30,7 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
 
         private IEnumerator Timer(PlayerManager pm, float setTime)
         {
-            timerGauge = CoreGameManager.Instance.GetHud(pm.playerNumber).gaugeManager.ActivateNewGauge(gagueSprite, setTime);
+            timerGauge = CoreGameManager.Instance.GetHud(pm.playerNumber).gaugeManager.ActivateNewGauge(gaugeSprite, setTime);
             PlayerMovementStatModifier statMod = pm.GetMovementStatModifier();
             statMod.AddModifier("walkSpeed", walkSpeedModifier);
             statMod.AddModifier("runSpeed", runSpeedModifier);

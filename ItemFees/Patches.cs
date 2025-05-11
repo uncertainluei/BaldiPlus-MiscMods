@@ -168,7 +168,7 @@ namespace UncertainLuei.BaldiPlus.ItemFees.Patches
             int cost = -Mathf.Max(Items.Apple.GetUsageCost(), CoreGameManager.Instance.GetPoints(player)/2);
             CoreGameManager.Instance.AddPoints(cost, player, true);
         }
-
+        
         private static readonly MethodInfo ytpPenaltyMethod = AccessTools.Method(typeof(BaldiTakeApplePatch), "YtpPenalty");
         private static readonly MethodInfo testAppleMethod = AccessTools.Method(typeof(ItemFeesExtensions), "CanAffordItemType");
         private static readonly FieldInfo playerNumberField = AccessTools.Field(typeof(PlayerManager), "playerNumber");

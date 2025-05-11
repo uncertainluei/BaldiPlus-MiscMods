@@ -15,7 +15,7 @@ namespace UncertainLuei.BaldiPlus.MathMachineTweaks
     [HarmonyPatch("Start")]
     public class IntializerPatch
     {
-        static void Prefix(ref int ___totalProblems, ref int ___wrongNoiseVal)
+        static void Prefix(ref int ___totalProblems)
         {
             ___totalProblems = Mathf.Max(___totalProblems, Mathf.Min(10, MathMachineTweaksPlugin.config_mathProblemCount.Value));
         }
@@ -25,10 +25,6 @@ namespace UncertainLuei.BaldiPlus.MathMachineTweaks
     [HarmonyPatch("NumberDropped")]
     public class FixMultiQuestionBalloons
     {
-
-        static FieldInfo spriteVar = AccessTools.Field(typeof(MathMachineNumber), "sprite");
-        static FieldInfo layerVar = AccessTools.Field(typeof(MathMachineNumber), "initialSpriteLayer");
-
         static void Prefix(MathMachine __instance, ref bool[] ___playerIsHolding, ref int[] ___playerHolding, int player)
         {
             if (player >= ___playerIsHolding.Length || !___playerIsHolding[player] || player >= ___playerHolding.Length) return;
@@ -38,7 +34,7 @@ namespace UncertainLuei.BaldiPlus.MathMachineTweaks
             num.trackPlayer = false;
             num.ClickableUnsighted(player);
 
-            ((Transform)spriteVar.GetValue(num)).gameObject.layer = (int)layerVar.GetValue(num);
+            num.sprite.gameObject.layer = num.initialSpriteLayer;
         }
     }
 
@@ -52,9 +48,9 @@ namespace UncertainLuei.BaldiPlus.MathMachineTweaks
             if (total < 10 || !text.isActiveAndEnabled) return;
 
             string newText = "";
-            answered.ToString().ToCharArray().Do((x) => newText = newText + $"<sprite={x}>");
+            answered.ToString().ToCharArray().Do((x) => newText += $"<sprite={x}>");
             newText = newText + "<sprite=10>";
-            total.ToString().ToCharArray().Do((x) => newText = newText + $"<sprite={x}>");
+            total.ToString().ToCharArray().Do((x) => newText += $"<sprite={x}>");
 
             text.text = newText;
         }
