@@ -37,7 +37,7 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
 
             // Read the config values and remove disabled modules
             RecommendedCharactersConfig.BindConfig(Config);
-            modules = modules.Where(x => x.Enabled).ToArray();
+            Modules = Modules.Where(x => x.Enabled).ToArray();
 
             RecommendedCharsSaveGameIO saveGameSystem = new RecommendedCharsSaveGameIO(Info);
             ModdedSaveGame.AddSaveHandler(saveGameSystem);
@@ -53,7 +53,7 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
             harmony.PatchAllConditionals();
         }
 
-        public Module[] modules = new Module[]
+        public Module[] Modules { get; private set; } = new Module[]
         {
             new Module_Circle(),
             new Module_GottaBully(),
@@ -88,9 +88,9 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
 
         private IEnumerator LoadModules()
         {
-            yield return modules.Length;
+            yield return Modules.Length;
 
-            foreach (Module module in modules)
+            foreach (Module module in Modules)
             { 
                 yield return $"Loading module \"{module.Name}\"";
                 module.LoadAction?.Invoke();
@@ -101,7 +101,7 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
         {
             CustomLevelObject[] lvls = scene.GetCustomLevelObjects();
 
-            foreach (Module module in modules)
+            foreach (Module module in Modules)
             {
                 module.FloorAddendAction?.Invoke(title, id, scene);
                 foreach (CustomLevelObject lvl in lvls)
@@ -111,7 +111,7 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
 
         private void FieldTripLootChange(FieldTrips fieldTrip, FieldTripLoot table)
         {
-            foreach (Module module in modules)
+            foreach (Module module in Modules)
                 module.FieldTripLootAction?.Invoke(fieldTrip, table);
         }
     }
@@ -144,7 +144,7 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
         {
             List<string> tags = new List<string>();
             
-            foreach (Module module in RecommendedCharsPlugin.Plugin.modules)
+            foreach (Module module in RecommendedCharsPlugin.Plugin.Modules)
                 tags.Add(module.Name);
             if (tags.Count > 0)
             {
