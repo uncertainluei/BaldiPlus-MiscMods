@@ -23,7 +23,7 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
 
         public override bool Use(PlayerManager pm)
         {
-		    Singleton<CoreGameManager>.Instance.audMan.PlaySingle(this.audEat);
+		    CoreGameManager.Instance.audMan.PlaySingle(audEat);
             StartCoroutine(Timer(pm, 15f));
             return true;
         }

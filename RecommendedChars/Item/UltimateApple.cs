@@ -58,8 +58,7 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
         {
             base.Exit();
             baldi.animator.enabled = true;
-            if (npc.behaviorStateMachine.CurrentState == previousState)
-                baldi.GetExtraAnger(8);
+            baldi.GetExtraAnger(12);
         }
 
         public override void Update()

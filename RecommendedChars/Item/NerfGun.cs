@@ -2,7 +2,7 @@
 {
     class ITM_NerfGun : Item
     {
-        public ItemObject leftover;
+        public ItemObject nextStage;
 
         public override bool Use(PlayerManager pm)
         {
@@ -21,9 +21,9 @@
             }
             if (fail) return false;
 
-            if (leftover)
+            if (nextStage)
             {
-                pm.itm.SetItem(leftover, pm.itm.selectedItem);
+                pm.itm.SetItem(nextStage, pm.itm.selectedItem);
                 return false;
             }
             return true;

@@ -1,76 +1,89 @@
-﻿using System.ComponentModel.Design;
-using System.Net.Sockets;
+﻿using System.Linq;
 using UnityEngine;
-using static Rewired.Demos.CustomPlatform.MyPlatformControllerExtension;
 
 namespace UncertainLuei.BaldiPlus.RecommendedChars
 {
     public class ITM_CherryBsoda : Item, IEntityTrigger
     {
-        private EnvironmentController ec;
+        public ITM_BSODA bsoda;
+        protected EnvironmentController Ec => bsoda.ec;
+        protected MovementModifier MoveMod => bsoda.moveMod;
+        protected Entity Entity => bsoda.entity;
 
         public LayerMaskObject layerMask;
-        public Entity entity;
-        public SoundObject sound;
         public SoundObject boing;
-        public SpriteRenderer spriteRenderer;
 
-        private PlayerManager currentPlayer;
-        private MovementModifier moveMod = new MovementModifier(default,0f);
+        protected PlayerManager currentPlayer;
 
-        public float speed = 35f;
-        public float time = 8f;
+        protected float Speed => bsoda.speed;
         public byte bouncesLeft = 3;
+
+        private bool destroyQueued = false;
 
         public override bool Use(PlayerManager pm)
         {
-            ec = pm.ec;
-
+            bsoda.Use(pm);
             currentPlayer = pm;
-            transform.position = pm.transform.position;
-            transform.forward = CoreGameManager.Instance.GetCamera(pm.playerNumber).transform.forward;
 
-            entity.Initialize(ec, transform.position);
-            entity.OnEntityMoveInitialCollision += OnEntityMoveCollision;
+            Entity.OnEntityMoveInitialCollision += OnEntityMoveCollision;
+            // Remove the ITM_BSODA EntityTrigger as it is grabbed by the Entity regardless of the component being disabled
+            Entity.iEntityTrigger = Entity.iEntityTrigger.Where(x => !(x is ITM_BSODA)).ToArray();
 
-            spriteRenderer.SetSpriteRotation(Random.Range(0f, 360f));
-            CoreGameManager.Instance.audMan.PlaySingle(sound);
-            pm.RuleBreak("Drinking", 0.8f, 0.25f);
-
-            moveMod.priority = 1;
-            pm.plm.Entity.ExternalActivity.moveMods.Add(moveMod);
+            AddPlayerToMoveMod();
             return true;
+        }
+
+        protected virtual void AddPlayerToMoveMod()
+        {
+            pm.plm.Entity.ExternalActivity.moveMods.Add(MoveMod);
         }
 
         private void Update()
         {
-            moveMod.movementAddend = entity.ExternalActivity.Addend + transform.forward * speed * ec.EnvironmentTimeScale;
-            entity.MoveWithCollision(transform.forward * speed * ec.EnvironmentTimeScale * Time.deltaTime);
+            MoveMod.movementAddend = Entity.ExternalActivity.Addend + transform.forward * Speed * Ec.EnvironmentTimeScale;
+            Entity.MoveWithCollision(transform.forward * Speed * Ec.EnvironmentTimeScale * Time.deltaTime);
 
-            time -= Time.deltaTime * ec.EnvironmentTimeScale;
-            if (time > 0f) return;
+            bsoda.time -= Time.deltaTime * Ec.EnvironmentTimeScale;
+            if (bsoda.time > 0f) return;
 
             Destroy();
         }
 
         public void EntityTriggerEnter(Collider other)
         {
+            if (!destroyQueued)
+                VirtualTriggerEnter(other);
         }
 
         public void EntityTriggerExit(Collider other)
+        {
+            if (!destroyQueued)
+                VirtualTriggerExit(other);
+        }
+
+        public void EntityTriggerStay(Collider other)
+        {
+        }
+
+        protected virtual void VirtualTriggerEnter(Collider other)
+        {
+        }
+        protected virtual void VirtualTriggerExit(Collider other)
         {
             if (other.CompareTag("Player") && other.transform == currentPlayer.transform)
                 Destroy();
         }
 
-        private void Destroy()
+        protected void Destroy()
         {
-            currentPlayer.plm.Entity.ExternalActivity.moveMods.Remove(moveMod);
+            destroyQueued = true;
+            VirtualDestroy();
             Destroy(gameObject);
         }
 
-        public void EntityTriggerStay(Collider other)
+        protected virtual void VirtualDestroy()
         {
+            currentPlayer.plm.am.moveMods.Remove(MoveMod);
         }
 
         private void OnEntityMoveCollision(RaycastHit hit)
@@ -83,9 +96,37 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
 
                 CoreGameManager.Instance.audMan.PlaySingle(boing);
                 transform.forward = transform.forward - (2f * Vector3.Dot(hit.normal, transform.forward) * hit.normal);
-                moveMod.movementAddend = entity.ExternalActivity.Addend + transform.forward * speed * ec.EnvironmentTimeScale;
-                entity.MoveWithCollision(transform.forward * speed * ec.EnvironmentTimeScale * Time.deltaTime);
+                MoveMod.movementAddend = Entity.ExternalActivity.Addend + transform.forward * Speed * Ec.EnvironmentTimeScale;
+                Entity.MoveWithCollision(transform.forward * Speed * Ec.EnvironmentTimeScale * Time.deltaTime);
             }
+        }
+    }
+
+    public class ITM_CherryBsoda_PushesNpcs : ITM_CherryBsoda
+    {   
+        protected override void AddPlayerToMoveMod()
+        {
+        }
+
+        protected override void VirtualTriggerEnter(Collider other)
+        {
+            bsoda.EntityTriggerEnter(other);
+        }
+
+        protected override void VirtualTriggerExit(Collider other)
+        {
+            bsoda.EntityTriggerExit(other);
+            if (other.CompareTag("Player") && other.transform == currentPlayer.transform && currentPlayer.plm.am.moveMods.Contains(MoveMod))
+                currentPlayer.plm.am.moveMods.Remove(MoveMod);
+        }
+
+        protected override void VirtualDestroy()
+        {
+            if (currentPlayer.plm.am.moveMods.Contains(MoveMod))
+                currentPlayer.plm.am.moveMods.Remove(MoveMod);
+
+            foreach (ActivityModifier activityMod in bsoda.activityMods)
+                activityMod.moveMods.Remove(MoveMod);
         }
     }
 }

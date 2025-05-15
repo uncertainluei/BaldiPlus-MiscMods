@@ -1,4 +1,6 @@
-﻿using MTM101BaldAPI.Components;
+﻿using HarmonyLib;
+using MTM101BaldAPI;
+using MTM101BaldAPI.Components;
 
 using System.Collections;
 using System.Collections.Generic;
@@ -38,10 +40,10 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
             ropeAnimator.PopulateAnimations(ropeAnimation, 15);
 
             countTmp.text = $"{jumps}/{LocalizationManager.Instance.GetLocalizedText(startKey)}";
-            StartCoroutine(RopeTimerNew());
+            StartCoroutine(CircleRopeTimer());
         }
 
-        private void RopeDownNew()
+        private void CircleRopeDown()
         {
             ropeDelay = 0f;
 
@@ -53,25 +55,22 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
                     playtime.Count(jumps);
 
                 countTmp.text = $"{jumps}/{LocalizationManager.Instance.GetLocalizedText(continueKey)}";
+                return;
             }
-            else
-            {
-                playtime.ec.MakeNoise(playtime.transform.position, noiseValue);
-                jumps = 0;
-                ropeDelay = 2f;
-                playtime.JumpropeHit();
 
-                totalPoints += penaltyVal;
-                if (totalPoints < 0)
-                {
-                    totalPoints = 0;
-                }
+            playtime.ec.MakeNoise(playtime.transform.position, noiseValue);
+            jumps = 0;
+            ropeDelay = 2f;
+            playtime.JumpropeHit();
 
-                countTmp.text = $"{jumps}/{LocalizationManager.Instance.GetLocalizedText(failKey)}";
-            }
+            totalPoints += penaltyVal;
+            if (totalPoints < 20)
+                totalPoints = 20;
+
+            countTmp.text = $"{jumps}/{LocalizationManager.Instance.GetLocalizedText(failKey)}";
         }
 
-        private IEnumerator RopeTimerNew()
+        private IEnumerator CircleRopeTimer()
         {
             while (jumps < maxJumps)
             {
@@ -90,7 +89,7 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
                     yield return null;
                 }
 
-                RopeDownNew();
+                CircleRopeDown();
             }
 
             while (height > 0f)
@@ -99,6 +98,48 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
             }
 
             End(success: true);
+        }
+    }
+}
+
+namespace UncertainLuei.BaldiPlus.RecommendedChars.Patches
+{
+    [ConditionalPatchConfig(RecommendedCharsPlugin.ModGuid, "Modules", "Circle")]
+    [HarmonyPatch]
+    class CirclePolymorphismPatches
+    {
+        [HarmonyPatch(typeof(Playtime), "EndJumprope")]
+        [HarmonyPostfix]
+        private static void EndJumprope(Playtime __instance, bool won)
+        {
+            if (__instance.Character != CircleNpc.charEnum) return;
+
+            CircleNpc circle = (CircleNpc)__instance;
+
+            if (!won)
+            {
+                // Re-disable the animator for good measure
+                __instance.animator.enabled = false;
+                circle.sprite.sprite = circle.sprSad;
+                return;
+            }
+            // If you win the jump rope game, then his cooldown is added by 200%
+            if (circle.behaviorStateMachine.currentState is Playtime_Cooldown cooldown)
+                cooldown.time = circle.initialCooldown * 3;
+        }
+
+        [HarmonyPatch(typeof(Playtime), "EndCooldown")]
+        [HarmonyPostfix]
+        private static void EndCooldown(Playtime __instance)
+        {
+            if (__instance.Character == CircleNpc.charEnum)
+            {
+                // Re-disable the animator for good measure
+                __instance.animator.enabled = false;
+
+                CircleNpc circle = (CircleNpc)__instance;
+                circle.sprite.sprite = circle.sprNormal;
+            }
         }
     }
 }

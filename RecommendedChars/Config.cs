@@ -7,7 +7,11 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
         internal static ConfigEntry<bool> moduleCircle;
         internal static ConfigEntry<bool> moduleGottaBully;
         internal static ConfigEntry<bool> moduleArtsWWires;
+#if DEBUG
         internal static ConfigEntry<bool> moduleCaAprilFools;
+
+        internal static ConfigEntry<bool> npcCherryBsoda;
+#endif
 
         internal static ConfigEntry<bool> intendedWiresBehavior;
         internal static ConfigEntry<bool> ogWiresSprites;
@@ -32,12 +36,19 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
                 "ArtsWWires",
                 true,
                 "Adds Arts with Wires, character sprites and audio from Kinzo/Kracc's 1st Prize Mania and Playtime's Swapped Basics respectively.");
+#if DEBUG
             moduleCaAprilFools = config.Bind(
                 "Modules",
                 "CaAprilFools",
                 true,
                 "Adds a few features from the April Fools updates from the Chaos Awakens Minecraft mod.");
 
+            npcCherryBsoda = config.Bind(
+                "Misc",
+                "NpcCherryBsoda",
+                false,
+                "Cherry BSODA will not push the player, and thus rather act like a BSODA that bounces.");
+#endif
             intendedWiresBehavior = config.Bind(
                 "Misc",
                 "IntendedWiresBehavior",

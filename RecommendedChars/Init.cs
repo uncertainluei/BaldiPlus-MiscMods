@@ -12,6 +12,7 @@ using MTM101BaldAPI.UI;
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.IO;
 using System.Linq;
 
@@ -88,10 +89,13 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
             ItemObject nerfItm1 = nerfGunBuilder.Build();
             nerfItm1.name = "RecChars NerfGun1";
             nerfItm1.item.name = "Itm_NerfGun1";
-            ((ITM_NerfGun)nerfItm.item).leftover = nerfItm1;
+            ((ITM_NerfGun)nerfItm.item).nextStage = nerfItm1;
 
             AssetMan.Add("NerfGunPoster", ObjectCreators.CreatePosterObject(AssetMan.Get<Texture2D>("NerfGun/hnt_nerfgun"), new PosterTextData[0]));
             AssetMan.Get<PosterObject>("NerfGunPoster").name = "NerfGunPoster";
+
+            // Reverse itemObject list so the (2) variant is always selected first
+            nerfGunMeta.itemObjects = nerfGunMeta.itemObjects.Reverse().ToArray();
         }
 
         private void LoadCircle()
@@ -155,7 +159,8 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
             jumprope.ropeDelay = 0f;
             jumprope.ropeTime = 1f;
             jumprope.maxJumps = 10;
-            jumprope.startVal = 43;
+            jumprope.startVal = 100;
+            jumprope.penaltyVal = 10;
 
             AssetMan.Add("CircleNpc", circle);
             NPCMetadata circleMeta = new NPCMetadata(Info, new NPC[] { circle }, circle.name, NPCMetaStorage.Instance.Get(Character.Playtime).flags | NPCFlags.MakeNoise, new string[] { "student" });
@@ -482,9 +487,11 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
         }
     }
 
+#if DEBUG
     public class Module_CaAprilFools : Module
     {
         public override string Name => "Man Meme Coin";
+        public override string SaveTag => Name + (RecommendedCharactersConfig.npcCherryBsoda.Value ? "(Cherry BSODA pushes NPCs)" : "");
 
         public override Action LoadAction => Load;
         public override Action<string, int, SceneObject> FloorAddendAction => FloorAddend;
@@ -509,43 +516,52 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
             .SetEnum("RecChars_FlaminHotCheetos")
             .SetMeta(ItemFlags.Persists, new string[] { "food" })
             .SetSprites(AssetLoader.SpriteFromTexture2D(AssetMan.Get<Texture2D>("CAItems/FlaminHotCheetos_Small"), 25f), AssetLoader.SpriteFromTexture2D(AssetMan.Get<Texture2D>("CAItems/FlaminHotCheetos_Large"), 50f))
-            .SetShopPrice(800)
+            .SetShopPrice(750)
             .SetGeneratorCost(80)
             .SetItemComponent<ITM_FlaminHotCheetos>()
             .Build();
 
+            cheetos.name = "RecChars FlaminHotCheetos";
+
             ITM_FlaminHotCheetos cheetosItm = (ITM_FlaminHotCheetos)cheetos.item;
+            cheetosItm.name = "Itm_FlaminHotCheetos";
             cheetosItm.gaugeSprite = cheetos.itemSpriteSmall;
             cheetosItm.audEat = ((ITM_ZestyBar)ItemMetaStorage.Instance.FindByEnum(Items.ZestyBar).value.item).audEat;
 
             // Cherry BSODA
             ItemObject cherryBsoda = new ItemBuilder(Info)
-            .SetNameAndDescription("RecChars_Itm_CherryBsoda", "RecChars_Desc_CherryBsoda")
+            .SetNameAndDescription("RecChars_Itm_CherryBsoda", RecommendedCharactersConfig.npcCherryBsoda.Value ? "RecChars_Desc_CherryBsoda_NoPlayerPush" : "RecChars_Desc_CherryBsoda")
             .SetEnum("RecChars_CherryBsoda")
             .SetMeta(ItemFlags.Persists | ItemFlags.CreatesEntity, new string[] { "drink" })
             .SetSprites(AssetLoader.SpriteFromTexture2D(AssetMan.Get<Texture2D>("CAItems/CherryBsoda_Small"), 25f), AssetLoader.SpriteFromTexture2D(AssetMan.Get<Texture2D>("CAItems/CherryBsoda_Large"), 50f))
-            .SetShopPrice(800)
+            .SetShopPrice(750)
             .SetGeneratorCost(80)
             .Build();
 
             cherryBsoda.name = "RecChars CherryBsoda";
 
             ITM_BSODA bsodaClone = GameObject.Instantiate((ITM_BSODA)ItemMetaStorage.Instance.FindByEnum(Items.Bsoda).value.item, MTM101BaldiDevAPI.prefabTransform);
+            bsodaClone.enabled = false;
+            bsodaClone.spriteRenderer.sprite = AssetLoader.SpriteFromTexture2D(AssetMan.Get<Texture2D>("CAItems/CherryBsoda_Spray"), 12f);
+            bsodaClone.speed = 40f;
+            bsodaClone.time = 10f;
 
-            ITM_CherryBsoda cherryBsodaUse = bsodaClone.gameObject.AddComponent<ITM_CherryBsoda>();
+            ITM_CherryBsoda cherryBsodaUse;
+            if (!RecommendedCharactersConfig.npcCherryBsoda.Value)
+                cherryBsodaUse = bsodaClone.gameObject.AddComponent<ITM_CherryBsoda>();
+            else
+                cherryBsodaUse = bsodaClone.gameObject.AddComponent<ITM_CherryBsoda_PushesNpcs>();
+
             cherryBsoda.item = cherryBsodaUse;
             cherryBsoda.item.name = "Itm_CherryBsoda";
-            cherryBsodaUse.entity = bsodaClone.entity;
-            cherryBsodaUse.spriteRenderer = bsodaClone.spriteRenderer;
-            cherryBsodaUse.spriteRenderer.sprite = AssetLoader.SpriteFromTexture2D(AssetMan.Get<Texture2D>("CAItems/CherryBsoda_Spray"), 12f);
-            cherryBsodaUse.sound = bsodaClone.sound;
+
+            cherryBsodaUse.bsoda = bsodaClone;
             cherryBsodaUse.boing = AssetMan.Get<SoundObject>("Boing");
 
             ITM_GrapplingHook hook = (ITM_GrapplingHook)ItemMetaStorage.Instance.FindByEnum(Items.GrapplingHook).value.item;
-            cherryBsodaUse.entity.collisionLayerMask = hook.entity.collisionLayerMask;
+            bsodaClone.entity.collisionLayerMask = hook.entity.collisionLayerMask;
             cherryBsodaUse.layerMask = hook.layerMask;
 
-            GameObject.DestroyImmediate(bsodaClone);
 
             // Ultimate Apple
             ItemObject ultiApple = new ItemBuilder(Info)
@@ -557,14 +573,53 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
             .SetGeneratorCost(100)
             .Build();
 
+            ultiApple.name = "RecChars UltimateApple";
             ultiApple.item = ItemMetaStorage.Instance.FindByEnum(Items.Apple).value.item;
 
             Baldi_UltimateApple.ultiAppleEnum = ultiApple.itemType;
             Baldi_UltimateApple.ultiAppleSprites = AssetLoader.SpritesFromSpritesheet(2, 1, 32f, new Vector2(0.5f, 0.5f), AssetMan.Get<Texture2D>("CAItems/BaldiUltimateApple"));
+
+            // Can of Mangles
+            ItemMetaData manglesMeta = new ItemMetaData(Info, new ItemObject[0]);
+            manglesMeta.flags = ItemFlags.MultipleUse;
+            manglesMeta.tags.Add("food");
+
+            ItemBuilder manglesBuilder = new ItemBuilder(Info)
+            .SetNameAndDescription("RecChars_Itm_Mangles1", "RecChars_Desc_Mangles")
+            .SetEnum("RecChars_Mangles")
+            .SetMeta(manglesMeta)
+            .SetSprites(AssetLoader.SpriteFromTexture2D(AssetMan.Get<Texture2D>("CAItems/Mangles_Small"), 25f), AssetLoader.SpriteFromTexture2D(AssetMan.Get<Texture2D>("CAItems/Mangles_Large"), 50f))
+            .SetShopPrice(500)
+            .SetGeneratorCost(60)
+            .SetItemComponent<ITM_Mangles>();
+
+            ItemObject manglesItemObject = manglesBuilder.Build();
+            manglesItemObject.name = "RecChars Mangles1";
+            ITM_Mangles manglesItm = (ITM_Mangles)manglesItemObject.item;
+            manglesItm.name = "Itm_Mangles1";
+            manglesItm.audEat = cheetosItm.audEat;
+
+            manglesBuilder.SetNameAndDescription("RecChars_Itm_Mangles2", "RecChars_Desc_Mangles");
+            ItemObject manglesItemObject2 = manglesBuilder.Build();
+            manglesItemObject2.name = "RecChars Mangles2";
+            manglesItm = (ITM_Mangles)manglesItemObject2.item;
+            manglesItm.name = "Itm_Mangles2";
+            manglesItm.audEat = cheetosItm.audEat;
+            manglesItm.nextStage = manglesItemObject;
+
+            manglesBuilder.SetNameAndDescription("RecChars_Itm_Mangles3", "RecChars_Desc_Mangles");
+            manglesItemObject = manglesItemObject2;
+            manglesItemObject2 = manglesBuilder.Build();
+            manglesItemObject2.name = "RecChars Mangles3";
+            manglesItm = (ITM_Mangles)manglesItemObject2.item;
+            manglesItm.name = "Itm_Mangles3";
+            manglesItm.audEat = cheetosItm.audEat;
+            manglesItm.nextStage = manglesItemObject;
         }
 
         private void FloorAddend(string title, int id, SceneObject scene)
         {
         }
     }
+#endif
 }

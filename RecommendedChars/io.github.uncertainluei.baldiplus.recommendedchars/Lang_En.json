@@ -37,6 +37,7 @@
 	{ "key": "RecChars_Desc_UltimateApple", "value": "Ultimate Apple\nBaldi may surely take longer to eat it,\nbut that apple is definitely tough stuff!\nMake sure you know where to hide once he's done!" },
 	{ "key": "RecChars_Itm_CherryBsoda", "value": "Cherry BSODA" },
 	{ "key": "RecChars_Desc_CherryBsoda", "value": "Cherry BSODA\nA special limited-edition flavored BSODA!\nIts unique cherry fizz will propel you as if you were a golf ball!" },
+	{ "key": "RecChars_Desc_CherryBsoda_PushesNpcs", "value": "Cherry BSODA\nA special limited-edition flavored BSODA!\nIts unique cherry fizz is also extra bouncy, so take caution when it backfires!" },
 	{ "key": "RecChars_Sfx_Boing", "value": "*Boing!*" },
 	
 	{ "key": "RecChars_Pst_ManMeme1", "value": "Man Meme Coin" },

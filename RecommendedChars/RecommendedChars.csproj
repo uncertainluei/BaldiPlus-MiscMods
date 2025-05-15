@@ -35,6 +35,9 @@
 		<Reference Include="PineDebug">
 			<HintPath>..\Dependencies\PineDebug.dll</HintPath>
 		</Reference>
+		<Reference Include="BBPlusCustomMusics" Publicize="true">
+			<HintPath>..\Dependencies\BBPlusCustomMusics.dll</HintPath>
+		</Reference>
 		<Reference Include="MTM101BaldAPI">
 			<HintPath>..\Dependencies\MTM101BaldAPI.dll</HintPath>
 		</Reference>

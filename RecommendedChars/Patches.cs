@@ -2,8 +2,6 @@
 
 using MTM101BaldAPI;
 
-using PineDebug;
-
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
@@ -102,42 +100,16 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars.Patches
         }
     }
 
+    [ConditionalPatchMod("pixelguy.pixelmodding.baldiplus.custommusics")]
     [ConditionalPatchConfig(RecommendedCharsPlugin.ModGuid, "Modules", "Circle")]
-    [HarmonyPatch(typeof(Playtime), "EndJumprope")]
-    class CircleEndJumpropePatch
+    [HarmonyPatch(typeof(BBPlusCustomMusics.MusicalInjection), "PlaytimeDingOverride")]
+    class CustomPlaytimeMusicPatch
     {
-        private static void Postfix(Playtime __instance, bool won)
-        {
-            if (!won && __instance.Character == CircleNpc.charEnum)
-            {
-                // Re-disable the animator for good measure
-                __instance.animator.enabled = false;
-
-                CircleNpc circle = (CircleNpc)__instance;
-                circle.sprite.sprite = circle.sprSad;
-            }
-        }
-    }
-
-    [ConditionalPatchConfig(RecommendedCharsPlugin.ModGuid, "Modules", "Circle")]
-    [HarmonyPatch(typeof(Playtime), "EndCooldown")]
-    class CircleEndCooldownPatch
-    {
-        private static void Postfix(Playtime __instance)
-        {
-            if (__instance.Character == CircleNpc.charEnum)
-            {
-                // Re-disable the animator for good measure
-                __instance.animator.enabled = false;
-
-                CircleNpc circle = (CircleNpc)__instance;
-                circle.sprite.sprite = circle.sprNormal;
-            }
-        }
+        private bool Prefix(object[] __args) => ((Playtime)__args[0]).Character != CircleNpc.charEnum;
     }
 
     [ConditionalPatchMod("alexbw145.baldiplus.pinedebug")]
-    [HarmonyPatch(typeof(PineDebugManager), "InitAssets")]
+    [HarmonyPatch(typeof(PineDebug.PineDebugManager), "InitAssets")]
     class PineDebugNpcIconPatch
     {
         internal static readonly Dictionary<Character, Texture2D> icons = new Dictionary<Character, Texture2D>();
@@ -149,7 +121,7 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars.Patches
             initialized = true;
 
             foreach (Character character in icons.Keys)
-                PineDebugManager.pinedebugAssets.Add($"Border{character.ToStringExtended()}", icons[character]);
+                PineDebug.PineDebugManager.pinedebugAssets.Add($"Border{character.ToStringExtended()}", icons[character]);
         }
     }
 }

@@ -58,7 +58,9 @@ namespace UncertainLuei.BaldiPlus.RecommendedChars
             new Module_Circle(),
             new Module_GottaBully(),
             new Module_ArtsWithWires(),
+#if DEBUG
             new Module_CaAprilFools()
+#endif
         };
 
         internal static X CloneComponent<T, X>(T original) where T : MonoBehaviour where X : T
