@@ -2,7 +2,6 @@
 using BepInEx.Configuration;
 
 using HarmonyLib;
-
 using UnityEngine;
 
 namespace UncertainLuei.BaldiPlus.TransitionTweaks
