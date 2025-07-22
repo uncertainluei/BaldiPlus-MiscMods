@@ -3,12 +3,13 @@
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
 		
+		<AssemblyName>UncertainLuei.$(MSBuildProjectName)</AssemblyName>
+		<RootNamespace>UncertainLuei.BaldiPlus.$(MSBuildProjectName)</RootNamespace>
+		
 		<Version>1.0</Version>
 		<FileVersion>$(Version)</FileVersion>
 		<ProductVersion>$(Version)</ProductVersion>
 		
-		<AssemblyName>UncertainLuei.$(MSBuildProjectName)</AssemblyName>
-		<RootNamespace>UncertainLuei.BaldiPlus.$(MSBuildProjectName)</RootNamespace>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<LangVersion>latest</LangVersion>
 		<NoWarn>1701;1702;IDE0017;IDE0051</NoWarn>
@@ -19,7 +20,7 @@
 			https://nuget.samboy.dev/v3/index.json
 		</RestoreAdditionalProjectSources>
 	</PropertyGroup>
-
+	
 	<ItemGroup>
 		<PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
 		<PackageReference Include="BepInEx.Core" Version="5.*" />
@@ -35,45 +36,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Reference Include="0Harmony">
-			<HintPath>..\Dependencies\0Harmony.dll</HintPath>
-		</Reference>
 		<Reference Include="Assembly-CSharp" Publicize="true">
 			<HintPath>..\Dependencies\Assembly-CSharp.dll</HintPath>
 		</Reference>
+		
 		<Reference Include="MTM101BaldAPI">
 			<HintPath>..\Dependencies\MTM101BaldAPI.dll</HintPath>
 		</Reference>
-		<Reference Include="BepInEx">
-			<HintPath>..\Dependencies\BepInEx.dll</HintPath>
-		</Reference>
-		<Reference Include="BepInEx.Harmony">
-			<HintPath>..\Dependencies\BepInEx.Harmony.dll</HintPath>
-		</Reference>
-		<Reference Include="BepInEx.Preloader">
-			<HintPath>..\Dependencies\BepInEx.Preloader.dll</HintPath>
-		</Reference>
-		<Reference Include="UnityEngine">
-			<HintPath>..\Dependencies\UnityEngine.dll</HintPath>
-		</Reference>
-		<Reference Include="UnityEngine.CoreModule">
-			<HintPath>..\Dependencies\UnityEngine.CoreModule.dll</HintPath>
-		</Reference>
-		<Reference Include="UnityEngine.UI">
-			<HintPath>..\Dependencies\UnityEngine.UI.dll</HintPath>
-		</Reference>
-		<Reference Include="UnityEngine.UIModule">
-			<HintPath>..\Dependencies\UnityEngine.UIModule.dll</HintPath>
-		</Reference>
-		<Reference Include="Unity.TextMeshPro">
-			<HintPath>..\Dependencies\Unity.TextMeshPro.dll</HintPath>
-		</Reference>
 	</ItemGroup>
-
-	<ItemGroup>
-	  <Content Include="io.github.uncertainluei.baldiplus.restartlevelbutton\Lang_En.json">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Content>
-	</ItemGroup>
-
 </Project>
