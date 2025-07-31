@@ -5,24 +5,27 @@ using MTM101BaldAPI;
 using MTM101BaldAPI.AssetTools;
 using MTM101BaldAPI.Registers;
 using MTM101BaldAPI.SaveSystem;
+
+using UncertainLuei.CaudexLib;
+
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
 using UnityEngine;
+using UncertainLuei.CaudexLib.Registers;
+using UncertainLuei.CaudexLib.Util.Extensions;
+
+using UncertainLuei.BaldiPlus.ItemFees.Patches;
 
 namespace UncertainLuei.BaldiPlus.ItemFees
 {
-    [BepInPlugin(ModGuid, ModName, ModVersion)]
-    [BepInDependency("mtm101.rulerp.bbplus.baldidevapi")]
-    class ItemFeesPlugin : BaseUnityPlugin
+    [BepInAutoPlugin(ModGuid, "Item Fees")]
+    [BepInDependency("io.github.uncertainluei.caudexlib")]
+    public partial class ItemFeesPlugin : BaseUnityPlugin
     {
-        public const string ModName = "Item Fees";
         public const string ModGuid = "io.github.uncertainluei.baldiplus.itemfees";
-        public const string ModVersion = "1.0";
-
-        public static Dictionary<ItemMetaData, string> descOverrides = new Dictionary<ItemMetaData, string>();
 
         internal static string costsConfigPath;
         internal static SoundObject errorSound;
@@ -33,18 +36,20 @@ namespace UncertainLuei.BaldiPlus.ItemFees
             costsConfigPath = Config.ConfigFilePath;
             costsConfigPath = costsConfigPath.Remove(costsConfigPath.Length - 3) + "json";
 
+            CaudexEvents.OnItemUse += UseItemPatches.UsageYtpPenalty;
+
             // Store save game system to initialize for later
-            ItemFeesSaveGameIO saveGameSystem = new ItemFeesSaveGameIO(Info);
+            ItemFeesSaveGameIO saveGameSystem = new(Info);
             ModdedSaveGame.AddSaveHandler(saveGameSystem);
 
             // Load localization file
             AssetLoader.LocalizationFromFile(Path.Combine(AssetLoader.GetModPath(this), "Lang_En.json"), Language.English);
 
-            LoadingEvents.RegisterOnAssetsLoaded(Info, GetAssets(), false);
+            LoadingEvents.RegisterOnAssetsLoaded(Info, GetAssets(), LoadingEventOrder.Pre);
             // Costs config is in post so it can deal with extended enums
-            LoadingEvents.RegisterOnAssetsLoaded(Info, PostLoad(saveGameSystem), true);
+            LoadingEvents.RegisterOnAssetsLoaded(Info, PostLoad(saveGameSystem), LoadingEventOrder.Post);
 
-            Harmony harmony = new Harmony(ModGuid);
+            Harmony harmony = new(ModGuid);
             harmony.PatchAllConditionals();
         }
 
@@ -59,11 +64,19 @@ namespace UncertainLuei.BaldiPlus.ItemFees
             errorSound.soundKey = "ItemFees_Sfx_Error";
 
             yield return "Creating item description overrides";
-            descOverrides.Add(ItemMetaStorage.Instance.FindByEnum(Items.Apple), "ItemFees_Desc_Apple");
-            descOverrides.Add(ItemMetaStorage.Instance.FindByEnum(Items.BusPass), "ItemFees_Desc_BusPass");
-            descOverrides.Add(ItemMetaStorage.Instance.Find(x => x.tags.Contains("shape_key")), "ItemFees_Desc_GameKey");
-            descOverrides.Add(ItemMetaStorage.Instance.FindByEnum(Items.GrapplingHook), "ItemFees_Desc_GrapplingHook");
+            ItemMetaStorage.Instance.FindByEnum(Items.Apple).AddDescOverride(DescOverride);
+            ItemMetaStorage.Instance.FindByEnum(Items.BusPass).AddDescOverride(DescOverride);
+            ItemMetaStorage.Instance.FindByEnum(Items.GrapplingHook).AddDescOverride(DescOverride);
+            ItemMetaStorage.Instance.Find(x => x.tags.Contains("shape_key")).AddDescOverride(DescOverride);
             yield break;
+        }
+
+        private string DescOverride(ItemObject itm, bool localized)
+        {
+            string result = "ItemFees_" + itm.descKey;
+            if (localized)
+                result = string.Format(result.Localize(), itm.GetUsageCost());
+            return result;
         }
 
         private IEnumerator PostLoad(ItemFeesSaveGameIO saveGameSystem)
@@ -87,21 +100,14 @@ namespace UncertainLuei.BaldiPlus.ItemFees
             yield break;
         }
 
-        public class ItemFeesSaveGameIO : ModdedSaveGameIOBinary
+        public class ItemFeesSaveGameIO(PluginInfo info) : ModdedSaveGameIOBinary
         {
-            public ItemFeesSaveGameIO(PluginInfo info)
-            {
-                this.info = info;
-                ready = false;
-            }
-            
             public void Ready()
             {
                 ready = true;
             }
 
-            private readonly PluginInfo info;
-            private bool ready;
+            private bool ready = false;
             public override PluginInfo pluginInfo => info;
 
             public override void Load(BinaryReader reader)

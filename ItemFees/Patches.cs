@@ -15,44 +15,16 @@ namespace UncertainLuei.BaldiPlus.ItemFees.Patches
     class UseItemPatches
     {
         public static readonly MethodInfo ytpPenaltyMethod = AccessTools.Method(typeof(UseItemPatches), "UsageYtpPenalty");
-        public static void UsageYtpPenalty(ItemManager itemMan, int slot)
+        public static void UsageYtpPenalty(ItemManager itemMan, ItemObject itm)
         {
             // Do not run if it's the tutorial level
             if (ItemFeesExtensions.IsTutorial) return;
 
-            ItemMetaData meta = itemMan.items[slot].GetMeta();
+            ItemMetaData meta = itm.GetMeta();
 
             // If an item with NoUses is used in special interactions (i.e. giving the Bus Pass to Johnny, YTPs are not revoked)
             if (meta == null || meta.flags != ItemFlags.NoUses)
-                CoreGameManager.Instance.AddPoints(-itemMan.GetUsageCost(slot), itemMan.pm.playerNumber, true, false);
-        }
-
-        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-        {
-            bool patched = false;
-            CodeInstruction[] array = instructions.ToArray();
-            int length = array.Length;
-
-            for (int i = 0; i < length; i++)
-            {
-                yield return array[i];
-                if (!patched &&
-                    array[i].opcode == OpCodes.Brfalse &&
-                    array[i+1].opcode == OpCodes.Ldarg_0 &&
-                    array[i+2].opcode == OpCodes.Ldarg_0)
-                {
-                    patched = true;
-                    yield return new CodeInstruction(OpCodes.Ldarg_0); // this
-                    yield return new CodeInstruction(OpCodes.Ldarg_0);
-                    yield return array[i+3]; // this.selectedItem
-                    yield return new CodeInstruction(OpCodes.Call, ytpPenaltyMethod); //YtpPenalty()
-                }
-            }
-
-            if (!patched)
-                Debug.LogError("Transpiler \"ItemFees.UseItemPatches.Transpiler\" did not go through!");
-
-            yield break;
+                CoreGameManager.Instance.AddPoints(-itm.GetUsageCost(), itemMan.pm.playerNumber, true, false);
         }
 
         private static bool Prefix(ItemManager __instance)
@@ -148,17 +120,6 @@ namespace UncertainLuei.BaldiPlus.ItemFees.Patches
         }
     }
 
-    [HarmonyPatch(typeof(ITM_GrapplingHook), "Use")]
-    class GrapplingHookUsePatch
-    {
-        private static void Postfix(PlayerManager pm, bool __result)
-        {
-            // Apply YTP fee if the grappling hook isn't used up
-            if (!__result)
-                UseItemPatches.UsageYtpPenalty(pm.itm, pm.itm.selectedItem);
-        }
-    }
-
     [HarmonyPatch(typeof(Baldi_Chase), "OnStateTriggerStay")]
     class BaldiTakeApplePatch
     {
@@ -222,21 +183,6 @@ namespace UncertainLuei.BaldiPlus.ItemFees.Patches
             else if (player.itm.Has(Items.BusPass))
             {
                 CoreGameManager.Instance.AddPoints(-Mathf.Max(Items.BusPass.GetUsageCost()), player.playerNumber, true, false);
-            }
-            return true;
-        }
-    }
-
-
-    [HarmonyPatch(typeof(Pickup), "ClickableSighted")]
-    class PickupSightPatch
-    {
-        private static bool Prefix(int player, ItemObject ___item, bool ___showDescription)
-        {
-            if (___showDescription && ___item.HasDescriptionOverride(out string newKey))
-            {
-                CoreGameManager.Instance.GetHud(player).tooltip.UpdateTooltip(newKey);
-                return false;
             }
             return true;
         }

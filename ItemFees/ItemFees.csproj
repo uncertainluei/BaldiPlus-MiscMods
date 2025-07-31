@@ -42,6 +42,9 @@
 		<Reference Include="Assembly-CSharp" Publicize="true">
 			<HintPath>..\Dependencies\Assembly-CSharp.dll</HintPath>
 		</Reference>
+		<Reference Include="UncertainLuei.CaudexLib">
+			<HintPath>..\Dependencies\UncertainLuei.CaudexLib.dll</HintPath>
+		</Reference>
 		<Reference Include="MTM101BaldAPI">
 			<HintPath>..\Dependencies\MTM101BaldAPI.dll</HintPath>
 		</Reference>

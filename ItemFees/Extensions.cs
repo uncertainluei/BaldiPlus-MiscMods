@@ -74,18 +74,5 @@ namespace UncertainLuei.BaldiPlus.ItemFees
                 return _isTutorial;
             }
         }
-
-        public static bool HasDescriptionOverride(this ItemObject itm, out string newText)
-        {
-            newText = "";
-
-            ItemMetaData meta = itm.GetMeta();
-            if (meta != null && ItemFeesPlugin.descOverrides.TryGetValue(meta, out string newDesc))
-            {
-                newText = string.Format(LocalizationManager.Instance.GetLocalizedText(newDesc), itm.GetUsageCost());
-                return true;
-            }
-            return false;
-        }
     }
 }
