@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -12,7 +11,7 @@ using MTM101BaldAPI.Registers;
 namespace UncertainLuei.BaldiPlus.ItemFees.Patches
 {
     [HarmonyPatch(typeof(ItemManager), "UseItem")]
-    class UseItemPatches
+    public static class UseItemPatches
     {
         public static readonly MethodInfo ytpPenaltyMethod = AccessTools.Method(typeof(UseItemPatches), "UsageYtpPenalty");
         public static void UsageYtpPenalty(ItemManager itemMan, ItemObject itm)
@@ -24,7 +23,7 @@ namespace UncertainLuei.BaldiPlus.ItemFees.Patches
 
             // If an item with NoUses is used in special interactions (i.e. giving the Bus Pass to Johnny, YTPs are not revoked)
             if (meta == null || meta.flags != ItemFlags.NoUses)
-                CoreGameManager.Instance.AddPoints(-itm.GetUsageCost(), itemMan.pm.playerNumber, true, false);
+                CoreGameManager.Instance.AddPoints(-itm.GetUsageCost(), itemMan.pm.playerNumber, true, false, false);
         }
 
         private static bool Prefix(ItemManager __instance)
@@ -43,7 +42,7 @@ namespace UncertainLuei.BaldiPlus.ItemFees.Patches
     }
 
     [HarmonyPatch(typeof(ItemManager))]
-    class ItemManagerDisplayPatches
+    public static class ItemManagerDisplayPatches
     {
         private static readonly MethodInfo setItemAvailabilityMethod = AccessTools.Method(typeof(ItemManagerDisplayPatches), "SetItemAvailability");
         private static void SetItemAvailability(HudManager hud, ItemManager itmMan, int slot)
@@ -107,21 +106,42 @@ namespace UncertainLuei.BaldiPlus.ItemFees.Patches
         }
     }
 
-    [HarmonyPatch(typeof(CoreGameManager), "AddPoints", typeof(int), typeof(int), typeof(bool), typeof(bool))]
-    class UpdatePointsPatch
+    [HarmonyPatch(typeof(CoreGameManager))]
+    public static class CoreGameManagerPatches
     {
-        private static void Postfix(CoreGameManager __instance, int player)
+        [HarmonyPatch("AddPoints", typeof(int), typeof(int), typeof(bool), typeof(bool), typeof(bool)), HarmonyPostfix]
+        private static void OnPointsAdded(CoreGameManager __instance, int player)
         {
-            if (__instance.huds == null || __instance.huds.Length <= player || __instance.GetHud(player) == null) return;
-            if (__instance.players == null || __instance.players.Length <= player || __instance.GetPlayer(player) == null) return;
+            if (__instance.players == null || __instance.players.Length <= player || !__instance.GetPlayer(player)) return;
+            if (__instance.huds == null || __instance.huds.Length <= player || !__instance.GetHud(player)) return;
 
             // Update inventory to reflect current items
             ItemManagerDisplayPatches.SetAllItemAvailability(__instance.GetHud(player), __instance.GetPlayer(player).itm);
         }
+
+        [HarmonyPatch("GetStickerBonuses"), HarmonyPostfix]
+        private static void ItemStickerBonus(CoreGameManager __instance, ref int __result)
+        {
+            int itemStickerMul = StickerManager.Instance.StickerValue(ItemFeesPlugin.itemBonusSticker);
+            if (itemStickerMul == 0) return;
+
+            ItemManager itm;
+            for (int i = 0; i < __instance.TotalPlayers; i++)
+            {
+                itm = __instance.GetPlayer(i).itm;
+                if (!itm) continue;
+
+                for (int j = 0; j < itm.items.Length && j <= itm.maxItem; j++)
+                {
+                    __result += Mathf.FloorToInt(itm.items[j].price * 0.15f * itemStickerMul);
+                    itm.RemoveItem(j);
+                }
+            }
+        }
     }
 
     [HarmonyPatch(typeof(Baldi_Chase), "OnStateTriggerStay")]
-    class BaldiTakeApplePatch
+    public static class BaldiTakeApplePatch
     {
         private static void YtpPenalty(int player)
         {
@@ -181,9 +201,7 @@ namespace UncertainLuei.BaldiPlus.ItemFees.Patches
                 return false;
             }
             else if (player.itm.Has(Items.BusPass))
-            {
-                CoreGameManager.Instance.AddPoints(-Mathf.Max(Items.BusPass.GetUsageCost()), player.playerNumber, true, false);
-            }
+                CoreGameManager.Instance.AddPoints(-Mathf.Max(Items.BusPass.GetUsageCost()), player.playerNumber, true, false, false);
             return true;
         }
     }

@@ -34,6 +34,8 @@ namespace UncertainLuei.BaldiPlus.ItemFees
             {Items.DoorLock, 75},
             {Items.Bsoda, 75},
             {Items.Nametag, 75},
+	        {Items.ReachExtender, 75},
+	        {Items.InvisibilityElixir, 100},
 	        {Items.CircleKey, 100},
 	        {Items.TriangleKey, 100},
 	        {Items.SquareKey, 100},

@@ -1,0 +1,11 @@
+{
+  "ItemFees_Desc_Apple": "An Apple for Baldi\nGive this to Baldi and as long as you have at least {0} YTPs,\nhe won't resist from stopping to scarf it down!\nMay take away half of your points if you have too many!",
+  "ItemFees_Desc_BusPass": "Bus Pass\nYou'll need not only one of these with you if you want to go\non a field trip, but also {0} spare YTPs for the travelling costs!",
+  "ItemFees_Desc_GrapplingHook": "Grappling Hook\nFire this baby at a far away wall to quickly get pulled towards it.\nEach use charges you {0} YTPs, instead of just when it is entirely used up.",
+  "ItemFees_Desc_GameKey": "Shape Key\nI bet this key could open a matching lock!\nBeware, such a lock will also demand {0} You Thought Points!",
+
+  "StickerTitle_ItemFees_ItemBonus": "Item Bonus",
+  "StickerDescription_ItemFees_ItemBonus": "If applied when winning a level, all items\nwill be cleared from the inventory in exchange\nof rewarding 15% of their total price.",
+
+  "Sfx_ItemFees_Error": "Not enough You Thought Points!"
+}

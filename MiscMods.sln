@@ -5,15 +5,13 @@ VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TransitionTweaks", "TransitionTweaks\TransitionTweaks.csproj", "{EBF2E93A-6941-44D2-A525-89256C375862}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestartLevelButton", "RestartLevelButton\RestartLevelButton.csproj", "{295BD921-DCDC-419B-885D-608BC930ACED}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItemFees", "ItemFees\ItemFees.csproj", "{BD9626B0-42B6-478B-BBEF-921B9CBF231D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathMachineTweaks", "MathMachineTweaks\MathMachineTweaks.csproj", "{C936F413-E8F5-4425-8723-30BD97FC5D62}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PedanticBugFixes", "PedanticBugFixes\PedanticBugFixes.csproj", "{BBE45719-3DA0-4DBA-B14B-0CCB669B0190}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "F2StructuresInF1", "F2StructuresInF1\F2StructuresInF1.csproj", "{7149F276-EAA4-4153-BA6B-A39384809D3E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LegacyCollisionFix", "LegacyCollisionFix\LegacyCollisionFix.csproj", "{7149F276-EAA4-4153-BA6B-A39384809D3E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +23,6 @@ Global
 		{EBF2E93A-6941-44D2-A525-89256C375862}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBF2E93A-6941-44D2-A525-89256C375862}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBF2E93A-6941-44D2-A525-89256C375862}.Release|Any CPU.Build.0 = Release|Any CPU
-		{295BD921-DCDC-419B-885D-608BC930ACED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{295BD921-DCDC-419B-885D-608BC930ACED}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{295BD921-DCDC-419B-885D-608BC930ACED}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{295BD921-DCDC-419B-885D-608BC930ACED}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BD9626B0-42B6-478B-BBEF-921B9CBF231D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BD9626B0-42B6-478B-BBEF-921B9CBF231D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD9626B0-42B6-478B-BBEF-921B9CBF231D}.Release|Any CPU.ActiveCfg = Release|Any CPU

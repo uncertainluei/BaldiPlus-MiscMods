@@ -25,7 +25,7 @@
 		<PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
 		<PackageReference Include="BepInEx.Core" Version="5.*" />
 		<PackageReference Include="Hamunii.BepInEx.AutoPlugin" Version="2.*" />
-		<PackageReference Include="UnityEngine.Modules" Version="2020.3.38" IncludeAssets="compile" />
+		<PackageReference Include="UnityEngine.Modules" Version="2020.3.49" IncludeAssets="compile" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 
 		<PackageReference Include="BepInEx.AssemblyPublicizer" Version="0.4.2" />
@@ -36,9 +36,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Reference Include="0Harmony">
-			<HintPath>..\Dependencies\0Harmony.dll</HintPath>
-		</Reference>
+		<EmbeddedResource Include="Assets/**/*">
+			<LogicalName>$([System.String]::new('%(RelativeDir)').Replace('/','/').Substring(7))%(FileName)%(Extension)</LogicalName>
+		</EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
 		<Reference Include="Assembly-CSharp" Publicize="true">
 			<HintPath>..\Dependencies\Assembly-CSharp.dll</HintPath>
 		</Reference>
@@ -48,6 +51,17 @@
 		<Reference Include="MTM101BaldAPI">
 			<HintPath>..\Dependencies\MTM101BaldAPI.dll</HintPath>
 		</Reference>
+
+		<Reference Include="PlusStudioLevelLoader">
+			<HintPath>../Dependencies/PlusStudioLevelLoader.dll</HintPath>
+		</Reference>
+		<Reference Include="PlusStudioLevelFormat">
+			<HintPath>../Dependencies/PlusStudioLevelFormat.dll</HintPath>
+		</Reference>
+		<Reference Include="PlusLevelStudio">
+			<HintPath>../Dependencies/PlusLevelStudio.dll</HintPath>
+		</Reference>
+
 		<Reference Include="BepInEx">
 			<HintPath>..\Dependencies\BepInEx.dll</HintPath>
 		</Reference>
