@@ -4,8 +4,8 @@
   "ItemFees_Desc_GrapplingHook": "Grappling Hook\nFire this baby at a far away wall to quickly get pulled towards it.\nEach use charges you {0} YTPs, instead of just when it is entirely used up.",
   "ItemFees_Desc_GameKey": "Shape Key\nI bet this key could open a matching lock!\nBeware, such a lock will also demand {0} You Thought Points!",
 
-  "StickerTitle_ItemFees_ItemBonus": "Item Bonus",
-  "StickerDescription_ItemFees_ItemBonus": "If applied when winning a level, all items\nwill be cleared from the inventory in exchange\nof rewarding 15% of their total price.",
+  "StickerTitle_ItemFees_ItemBonus": "Treasure Bonus",
+  "StickerDescription_ItemFees_ItemBonus": "If applied when winning a level, all items\nwill be cleared from the inventory in exchange\nof rewarding 25% per sticker of their total price.",
 
   "Sfx_ItemFees_Error": "Not enough You Thought Points!"
 }

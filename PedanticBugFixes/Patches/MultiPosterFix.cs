@@ -13,19 +13,6 @@ namespace UncertainLuei.BaldiPlus.PedanticBugFixes.Patches
         private static bool IsCellAvailable(Cell cell, Direction dir) => !Directions.OpenDirectionsFromBin(cell.ConstBin).Contains(dir) && !cell.WallSoftCovered(dir);
         private static readonly MethodInfo cellCoverInfo = AccessTools.Method(typeof(MultiPosterFix), "IsCellAvailable");
 
-#if false
-        private static void Postfix(EnvironmentController __instance, ref List<Cell> __result, Direction dir)
-        {
-            Debug.Log($"TilesLeftToRight executued, length {__result.Count}, at direction {dir}");
-            foreach (Cell cell1 in __result)
-            {
-                cell1.tile.meshRenderer.material.mainTexture = __instance.tilePre.meshRenderer.material.mainTexture;
-                Debug.Log(cell1.position.x + ", " + cell1.position.z);
-            }
-            Debug.Log("");
-        }
-#endif
-
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             byte patches = 0;

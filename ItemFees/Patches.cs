@@ -133,7 +133,7 @@ namespace UncertainLuei.BaldiPlus.ItemFees.Patches
 
                 for (int j = 0; j < itm.items.Length && j <= itm.maxItem; j++)
                 {
-                    __result += Mathf.FloorToInt(itm.items[j].price * 0.15f * itemStickerMul);
+                    __result += Mathf.FloorToInt(itm.items[j].price * 0.25f * itemStickerMul);
                     itm.RemoveItem(j);
                 }
             }
