@@ -24,6 +24,7 @@ using System;
 using PlusLevelStudio.Editor;
 using PlusLevelStudio.Editor.Tools;
 using BepInEx.Bootstrap;
+using System.Collections.Generic;
 
 namespace UncertainLuei.BaldiPlus.ItemFees
 {
@@ -63,7 +64,7 @@ namespace UncertainLuei.BaldiPlus.ItemFees
             if (Chainloader.PluginInfos.ContainsKey("mtm101.rulerp.baldiplus.levelstudio"))
                 LoadingEvents.RegisterOnAssetsLoaded(Info, RegisterToStudio(), LoadingEventOrder.Pre);
 
-            GeneratorManagement.Register(this, GenerationModType.Addend, AddStickerToGenerator);
+            GeneratorManagement.Register(this, GenerationModType.Addend, AddToGenerator);
             // Costs config is in post so it can deal with extended enums
             LoadingEvents.RegisterOnAssetsLoaded(Info, PostLoad(saveGameSystem), LoadingEventOrder.Post);
 
@@ -71,15 +72,16 @@ namespace UncertainLuei.BaldiPlus.ItemFees
             harmony.PatchAllConditionals();
         }
 
+        private static SwingDoor_Coin coinDoorPre;
         private IEnumerator CreateAssets()
         {
-            yield return 4;
+            yield return 5;
             yield return "Grabbing error sound";
             errorSound = Resources.FindObjectsOfTypeAll<SoundObject>().First(x => x.name == "ErrorMaybe" && x.GetInstanceID() >= 0);
 
             errorSound = Instantiate(errorSound);
             errorSound.name = "ErrorMaybe_Item";
-            errorSound.soundKey = "ItemFees_Sfx_Error";
+            errorSound.soundKey = "Sfx_ItemFees_Error";
 
             yield return "Creating item description overrides";
 
@@ -94,6 +96,9 @@ namespace UncertainLuei.BaldiPlus.ItemFees
             ItemMetaStorage.Instance.FindByEnum(Items.BusPass).AddDescOverride(descOverride);
             ItemMetaStorage.Instance.FindByEnum(Items.GrapplingHook).AddDescOverride(descOverride);
             ItemMetaStorage.Instance.Find(x => x.tags.Contains("shape_key")).AddDescOverride(descOverride);
+
+            yield return "Grabbing coin door prefab";
+            coinDoorPre = Resources.FindObjectsOfTypeAll<SwingDoor_Coin>().First(x => x.GetInstanceID() >= 0 && x.name == "Door_SwingingCoin");
 
             yield return "Adding point doors";
             var swingDoor = Resources.FindObjectsOfTypeAll<SwingDoor>().First(x => x.GetInstanceID() >= 0 && x.name == "Door_Swinging");
@@ -143,12 +148,49 @@ namespace UncertainLuei.BaldiPlus.ItemFees
             yield break;
         }
 
-        private void AddStickerToGenerator(string name, int id, SceneObject sceneObj)
+        private void AddToGenerator(string name, int id, SceneObject sceneObj)
         {
             if (sceneObj.GetMeta()?.tags.Contains("endless") != true)
             {
                 sceneObj.potentialStickers = sceneObj.potentialStickers.AddToArray(new WeightedSticker(itemBonusSticker, 100));
                 sceneObj.MarkAsNeverUnload();
+            }
+
+            StructureWithParameters swingDoorBuilder;
+            bool hasCoinDoor;
+
+            foreach (CustomLevelObject lvl in sceneObj.GetCustomLevelObjects())
+            {
+                if (lvl.IsModifiedByMod(Info)) continue;
+                lvl.MarkAsModifiedByMod(Info);
+
+                swingDoorBuilder = lvl.forcedStructures.FirstOrDefault(x => x.prefab && x.prefab.name == "SwingingDoorConstructor" && x.prefab.GetInstanceID() >= 0);
+                if (swingDoorBuilder == null) continue;
+
+                hasCoinDoor = false;
+                foreach (WeightedGameObject prefab in swingDoorBuilder.parameters.prefab)
+                {
+                    if (prefab == null || !prefab.selection) continue; // in case a mod screws something over
+                    if (prefab.selection == coinDoorPre.gameObject)
+                    {
+                        hasCoinDoor = true;
+                        prefab.weight *= 2;
+                    }
+                }
+                if (!hasCoinDoor)
+                {
+                    swingDoorBuilder.parameters.prefab = swingDoorBuilder.parameters.prefab.AddRangeToArray([
+                        coinDoorPre.gameObject.Weighted(10),
+                        pointDoors[0].gameObject.Weighted(14),
+                        pointDoors[1].gameObject.Weighted(1)
+                    ]);
+                    continue;
+                }
+
+                swingDoorBuilder.parameters.prefab = swingDoorBuilder.parameters.prefab.AddRangeToArray([
+                    pointDoors[0].gameObject.Weighted(20),
+                    pointDoors[1].gameObject.Weighted(10)
+                ]);
             }
         }
 
