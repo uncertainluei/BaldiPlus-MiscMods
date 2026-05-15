@@ -10,8 +10,7 @@
   "Sfx_ItemFees_Error": "Not enough You Thought Points!",
   
   // Level Studio
-  "Ed_Tool_door_itemfees_pointdoor_250_Title","value":"Point Door (250 YTPs)"},
-  "Ed_Tool_door_itemfees_pointdoor_250_Desc","value":"A yellow door that requires 250 YTPs to unlock."},
-  "Ed_Tool_door_itemfees_pointdoor_500_Title","value":"Point Door (500 YTPs)"},
-  "Ed_Tool_door_itemfees_pointdoor_500_Desc","value":"A yellow door that requires 500 YTPs to unlock. Pay up."}
-}
+  "Ed_Tool_door_itemfees_pointdoor_250_Title": "Point Door (250 YTPs)",
+  "Ed_Tool_door_itemfees_pointdoor_250_Desc": "A yellow door that requires 250 YTPs to unlock.",
+  "Ed_Tool_door_itemfees_pointdoor_500_Title": "Point Door (500 YTPs)",
+  "Ed_Tool_door_itemfees_pointdoor_500_Desc": "A yellow door that requires 500 YTPs to unlock. Pay up."
